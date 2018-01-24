@@ -4,7 +4,7 @@
   "parameters": {
     "action": {
       "description": "Action to perform ",
-      "type": "Enum[build_db, build_rtmserver, build_rtmdesktop, build_rtmservices]"
+      "type": "Enum[build_db, build_ogamserver, build_ogamdesktop, build_ogamservices]"
     },
     "environment": {
       "description": "Action's environment ",

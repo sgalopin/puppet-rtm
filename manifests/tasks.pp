@@ -14,27 +14,27 @@ class rtm::tasks (
       git_clone_directory => $git_clone_directory
     }),
   }
-  file { "${local_scripts_directory}/build_rtmserver.sh":
+  file { "${local_scripts_directory}/build_ogamserver.sh":
     ensure  => 'file',
     mode    => '0400',
-    content => epp("${module_name}/build_rtmserver.epp", {
+    content => epp("${module_name}/build_ogamserver.epp", {
       docroot_directory => $docroot_directory,
       tmp_directory => $tmp_directory,
       git_clone_directory => $git_clone_directory
     }),
   }
-  file { "${local_scripts_directory}/build_rtmdesktop.sh":
+  file { "${local_scripts_directory}/build_ogamdesktop.sh":
     ensure  => 'file',
     mode    => '0400',
-    content => epp("${module_name}/build_rtmdesktop.epp", {
+    content => epp("${module_name}/build_ogamdesktop.epp", {
       docroot_directory => $docroot_directory,
       git_clone_directory => $git_clone_directory
     }),
   }
-  file { "${local_scripts_directory}/build_rtmservices.sh":
+  file { "${local_scripts_directory}/build_ogamservices.sh":
     ensure  => 'file',
     mode    => '0400',
-    content => epp("${module_name}/build_rtmservices.epp", {
+    content => epp("${module_name}/build_ogamservices.epp", {
       git_clone_directory => $git_clone_directory,
       tomcat_directory => $tomcat_directory,
     }),

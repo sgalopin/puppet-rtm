@@ -7,12 +7,12 @@ def service(action, environment)
   case action
   when "build_db"
     cmd_string = "/bin/bash /root/tmp/rtm/scripts/build_db.sh -e #{environment}"
-  when "build_rtmserver"
-    cmd_string = "/bin/bash /root/tmp/rtm/scripts/build_rtmserver.sh -e #{environment}"
-  when "build_rtmdesktop"
-    cmd_string = "/bin/bash /root/tmp/rtm/scripts/build_rtmdesktop.sh -e #{environment}"
-  when "build_rtmservices"
-    cmd_string = "/bin/bash /root/tmp/rtm/scripts/build_rtmservices.sh -e #{environment}"
+  when "build_ogamserver"
+    cmd_string = "/bin/bash /root/tmp/rtm/scripts/build_ogamserver.sh -e #{environment}"
+  when "build_ogamdesktop"
+    cmd_string = "/bin/bash /root/tmp/rtm/scripts/build_ogamdesktop.sh -e #{environment}"
+  when "build_ogamservices"
+    cmd_string = "/bin/bash /root/tmp/rtm/scripts/build_ogamservices.sh -e #{environment}"
   else
     raise Puppet::Error, "Unknow action: #{action}"
   end
