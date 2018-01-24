@@ -12,6 +12,7 @@ class rtm::git (
           'mapserver/',
           'services_configs/',
           'website/',
-        ]
+        ],
+        excludes => 'Bases SQL/donnees_fournies_par_RTM/'
     }
 }
