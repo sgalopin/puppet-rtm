@@ -12,14 +12,13 @@ class rtm::tomcat (
         package_ensure => 'present',
         package_name => 'tomcat8',
         #source_url => 'https://www.apache.org/dist/tomcat/tomcat-8/v8.5.24/bin/apache-tomcat-8.5.24.tar.gz',
-    }
+    }->
     tomcat::instance { 'tomcat8':
         user => 'tomcat8',
         group => 'tomcat8',
         catalina_home => $tomcat_directory,
         manage_service => true,
-    }
-
+    }->
     file { "${tomcat_directory}/lib":
         ensure  => directory,
         owner => 'tomcat8',

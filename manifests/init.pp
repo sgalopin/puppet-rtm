@@ -69,7 +69,8 @@ class rtm  {
         group => 'www-data',
         mode    => '0750',
     }
-    file { [ '/var/www/rtm',
+    file { [ '/var/www',
+             '/var/www/rtm',
               $docroot_directory, ]:
         ensure => 'directory',
         #owner => 'www-data',
