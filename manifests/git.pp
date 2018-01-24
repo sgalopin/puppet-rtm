@@ -3,36 +3,18 @@ class rtm::git (
 ) {
     package { 'subversion': ensure => 'installed' }
 
-    vcsrepo { $git_clone_directory:
-        ensure   => present,
-        provider => svn,
-        source   => 'http://ifn-dev.ign.fr/svn/RTM/trunk',
-        # the excludes parameters doesn't work with svn provider
-        includes => [
-          'Bases SQL/0 - Create harmonized_data schema.sql',
-          'Bases SQL/0 - Create mapping schema.sql',
-          'Bases SQL/0 - Create metadata schema.sql',
-          'Bases SQL/0 - Create raw_data schema.sql',
-          'Bases SQL/0 - Create website schema.sql',
-          'Bases SQL/1 - Create user.sql',
-          'Bases SQL/2 - Populate mapping schema.sql',
-          'Bases SQL/2 - Populate metadata schema.sql',
-          'Bases SQL/2 - Populate website schema.sql',
-          'Bases SQL/3 - Right management.sql',
-          'Bases SQL/Data/',
-          'Bases SQL/Mapping/',
-          'Bases SQL/Metadata/',
-          'Bases SQL/__convert_latlon_dms2.sql',
-          'mapserver/',
-          'services_configs/',
-          'website/',
-          'libs_java/',
-          'libs_php/',
-          'service_common',
-          'service_generation_rapport',
-          'service_harmonization',
-          'service_integration',
-          'Service_Java_Generation_de_Rapports',
-        ],
+    # The excludes parameters doesn't work with svn provider
+    # The includes parameters use 'svn update' command and so doesn't checkout the externals
+    # The 'svn co' done (when there are no inludes or excludes parameters)
+    # with that module throws an encoding error on the dir 'Bases SQL/donnees_fournies_par_RTM/'
+    # vcsrepo { $git_clone_directory:
+    #     ensure   => present,
+    #     provider => svn,
+    #     source   => 'http://ifn-dev.ign.fr/svn/RTM/trunk',
+    # }
+
+    exec { "svn co http://ifn-dev.ign.fr/svn/RTM/trunk ${git_clone_directory}":
+      path    => '/usr/bin:/usr/sbin:/bin',
+      unless  => "test -f ${git_clone_directory}/README.txt",
     }
 }
