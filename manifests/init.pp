@@ -42,7 +42,93 @@
 #
 # Copyright 2018 Your name here, unless otherwise noted.
 #
-class rtm {
+class rtm  {
 
+    package { 'unzip': ensure => 'installed' }
 
+    # Directories paths
+    $git_clone_directory      = '/root/tmp/rtm/sources'
+    $local_scripts_directory  = '/root/tmp/rtm/scripts'
+    $conf_directory           = '/etc/rtm'
+    $docroot_directory        = '/var/www/rtm/web'
+    $tilecache_directory      = '/var/www/tilecache'
+    $tmp_directory            = '/var/tmp/rtm'
+    $log_directory            = '/var/log/rtm'
+    $tomcat_directory         = '/var/lib/tomcat8'
+
+    # Defaults directories
+    file { [ '/root/tmp',
+             '/root/tmp/rtm',
+              $git_clone_directory,
+              $local_scripts_directory, ]:
+        ensure  => directory,
+        mode    => '0700',
+    }
+    file { $conf_directory:
+        ensure  => directory,
+        group => 'www-data',
+        mode    => '0750',
+    }
+    file { [ '/var/www/rtm',
+              $docroot_directory, ]:
+        ensure => 'directory',
+        #owner => 'www-data',
+        group => 'www-data',
+        mode => '0750'
+    }
+    file { [  $tilecache_directory,
+              "${tilecache_directory}/cache", ]:
+        ensure  => directory,
+        group => 'www-data',
+        mode    => '0770',
+    }
+    file { $tmp_directory:
+        ensure  => directory,
+        group => 'www-data',
+        mode    => '0771',
+    }
+    file { $log_directory:
+        ensure  => directory,
+        group => 'www-data',
+        mode    => '0770',
+    }
+
+    # Class
+    include rtm::java
+    class {'rtm::git':
+        git_clone_directory => $git_clone_directory
+    }
+    class {'rtm::postgresql':
+        git_clone_directory => $git_clone_directory,
+        tmp_directory => $tmp_directory,
+    }
+    class {'rtm::tomcat':
+        git_clone_directory => $git_clone_directory,
+        tmp_directory => $tmp_directory,
+    }
+    class {'rtm::apache':
+        docroot_directory => $docroot_directory,
+        log_directory => $log_directory,
+        conf_directory => $conf_directory,
+    }
+    class {'rtm::sencha':
+        local_scripts_directory => $local_scripts_directory,
+        tmp_directory => $tmp_directory,
+    }
+    class {'rtm::mapserv':
+        git_clone_directory => $git_clone_directory,
+        conf_directory => $conf_directory,
+        log_directory => $log_directory,
+    }
+    class {'rtm::tilecache':
+        git_clone_directory => $git_clone_directory,
+        tilecache_directory => $tilecache_directory,
+    }
+    class {'rtm::tasks':
+        docroot_directory => $docroot_directory,
+        git_clone_directory => $git_clone_directory,
+        local_scripts_directory => $local_scripts_directory,
+        tmp_directory => $tmp_directory,
+        tomcat_directory => $tomcat_directory,
+    }
 }

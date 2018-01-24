@@ -1,0 +1,70 @@
+#!/bin/bash
+set -e
+set -o pipefail
+
+# Default configuration :
+environment=production
+
+while [ "x$1" != "x"  ]
+do
+  case "$1" in
+      "--env" | "-e" )
+          shift
+          environment=$1
+          shift
+          ;;
+      "--help" | "-h" | * )
+          echo "Install Rtm's database"
+          echo "  Usage : $(basename $0) [options]"
+          echo "    Options :"
+          echo "      -e, --env    : Build environment [development, production] (default: « $environment »)"
+          echo "      -h, --help   : Print help information and exit"
+          exit
+          ;;
+  esac
+done
+
+echo "-- Installation of Rtm's database (env=$environment)"
+
+echo "-- Drop the old database"
+dropdb -w -U postgres -h localhost --if-exists rtm
+
+echo "-- UTF8 Database creation"
+createdb -w -U postgres -h localhost -E UTF8 rtm
+
+echo "-- Add-ons"
+psql -qw -U postgres -h localhost -d rtm -c "CREATE EXTENSION postgis"
+
+echo "-- Scripts"
+psql -qw -U postgres -h localhost -d rtm -f "<%= $git_clone_directory %>/database/1-Create_mapping_schema.sql"
+psql -qw -U postgres -h localhost -d rtm -f "<%= $git_clone_directory %>/database/1-Create_metadata_schema.sql"
+psql -qw -U postgres -h localhost -d rtm -f "<%= $git_clone_directory %>/database/1-Create_raw_data_schema.sql"
+psql -qw -U postgres -h localhost -d rtm -f "<%= $git_clone_directory %>/database/1-Create_referentiels_schema.sql"
+psql -qw -U postgres -h localhost -d rtm -f "<%= $git_clone_directory %>/database/1-Create_website_schema.sql"
+cd <%= $git_clone_directory %>/database
+psql -qw -U postgres -h localhost -d rtm -f "<%= $git_clone_directory %>/database/2-Import_ModTaxRef-v8.0.sql"
+if [ "$environment" = "development" ]; then
+  psql -qw -U postgres -h localhost -d rtm -f "<%= $git_clone_directory %>/database/2-Import_ModTaxRef-Test.sql"
+fi
+psql -qw -U postgres -h localhost -d rtm -f "<%= $git_clone_directory %>/database/2-Populate_mapping_schema.sql"
+psql -qw -U postgres -h localhost -d rtm -f "<%= $git_clone_directory %>/database/Referentiels/communes.sql"
+psql -qw -U postgres -h localhost -d rtm -f "<%= $git_clone_directory %>/database/Referentiels/departements.sql"
+psql -qw -U postgres -h localhost -d rtm -f "<%= $git_clone_directory %>/database/Referentiels/nuts_0.sql"
+cd <%= $git_clone_directory %>/database/Metadata
+psql -qw -U postgres -h localhost -d rtm -f "<%= $git_clone_directory %>/database/Metadata/import_from_csv.sql"
+psql -qw -U postgres -h localhost -d rtm -f "<%= $git_clone_directory %>/database/2-Populate_website_schema.sql"
+psql -qw -U postgres -h localhost -d rtm -f "<%= $git_clone_directory %>/database/3-Checks.sql"
+psql -qw -U postgres -h localhost -d rtm -f "<%= $git_clone_directory %>/database/4-Processing.sql"
+psql -qw -U postgres -h localhost -d rtm -f "<%= $git_clone_directory %>/database/4-EventListener.sql"
+psql -qw -U postgres -h localhost -d rtm -f "<%= $git_clone_directory %>/database/5-Create_user.sql"
+psql -qw -U postgres -h localhost -d rtm -c "GRANT CONNECT ON DATABASE rtm TO rtm;"
+
+echo "-- Overriding defaut config values"
+psql -qw -U postgres -h localhost -d rtm -c "UPDATE website.application_parameters SET value = '<%= $tmp_directory %>/rtm_upload' WHERE name = 'UploadDirectory';"
+psql -qw -U postgres -h localhost -d rtm -c "UPDATE website.application_parameters SET value = '<%= $tmp_directory %>/upload' WHERE name = 'uploadDir';"
+psql -qw -U postgres -h localhost -d rtm -c "UPDATE website.application_parameters SET value = '<%= $tmp_directory %>/upload/images/' WHERE name = 'image_upload_dir';"
+psql -qw -U postgres -h localhost -d rtm -c "UPDATE mapping.layer_service SET config = '{\"urls\":[\"http://<%= $fqdn %>/mapserverProxy.php?\"],\"params\":{\"SERVICE\":\"WMS\",\"VERSION\":\"1.1.1\",\"REQUEST\":\"GetMap\"}}' WHERE name = 'Local_MapProxy_Mapserv_WMS_GetMap';"
+psql -qw -U postgres -h localhost -d rtm -c "UPDATE mapping.layer_service SET config = '{\"urls\":[\"http://<%= $fqdn %>/tilecacheProxy.php?\"],\"params\":{\"SERVICE\":\"WMS\",\"VERSION\":\"1.1.1\",\"REQUEST\":\"GetMap\"}}' WHERE name = 'Local_MapProxy_Tilecache_WMS_GetMap';"
+psql -qw -U postgres -h localhost -d rtm -c "UPDATE mapping.layer_service SET config = '{\"urls\":[\"http://<%= $fqdn %>/mapserverProxy.php?\"],\"params\":{\"SERVICE\":\"WFS\",\"VERSION\":\"1.1.0\",\"REQUEST\":\"GetFeature\"}}' WHERE name = 'Local_MapProxy_WFS_GetFeature';"
+psql -qw -U postgres -h localhost -d rtm -c "UPDATE mapping.layer_service SET config = '{\"urls\":[\"http://<%= $fqdn %>/mapserverProxy.php?\"],\"params\":{\"SERVICE\":\"WMS\",\"VERSION\":\"1.1.1\",\"REQUEST\":\"GetLegendGraphic\"}}' WHERE name = 'Local_MapProxy_WMS_GetLegendGraphic';"
+psql -qw -U postgres -h localhost -d rtm -c "UPDATE mapping.layer_service SET config = '{\"urls\":[\"http://<%= $fqdn %>/proxy/getwfs?\"],\"params\":{\"SERVICE\":\"WFS\",\"VERSION\":\"1.0.0\",\"REQUEST\":\"GetFeature\"}}' WHERE name = 'Local_Proxy_WFS_GetFeature';"

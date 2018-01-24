@@ -1,0 +1,61 @@
+#!/bin/bash
+set -e
+set -o pipefail
+
+# Default configuration :
+environment=production
+
+while [ "x$1" != "x"  ]
+do
+  case "$1" in
+      "--env" | "-e" )
+          shift
+          environment=$1
+          shift
+          ;;
+      "--help" | "-h" | * )
+          echo "Install Rtm Services"
+          echo "  Usage : $(basename $0) [options]"
+          echo "    Options :"
+          echo "      -e, --env    : Build environment [development, production] (default: « $environment »)"
+          echo "      -h, --help   : Print help information and exit"
+          exit
+          ;;
+  esac
+done
+
+echo "-- Installation of Rtm Services (env=$environment)"
+
+echo "-- Stopping tomcat"
+sudo /etc/init.d/tomcat8 stop
+
+echo "-- Integration service"
+gradle war -b <%= $git_clone_directory %>/service_integration/build.gradle
+
+cp <%= $git_clone_directory %>/service_integration/config/RTMIntegrationService.xml \
+<%= $tomcat_directory %>/conf/Catalina/localhost/RTMIntegrationService.xml
+
+cp <%= $git_clone_directory %>/service_integration/build/libs/service_integration-4.0.0.war \
+<%= $tomcat_directory %>/webapps/RTMIntegrationService.war
+
+echo "-- Harmonization service"
+gradle war -b <%= $git_clone_directory %>/service_harmonization/build.gradle
+
+cp <%= $git_clone_directory %>/service_harmonization/config/RTMHarmonizationService.xml \
+<%= $tomcat_directory %>/conf/Catalina/localhost/RTMHarmonizationService.xml
+
+cp <%= $git_clone_directory %>/service_harmonization/build/libs/service_harmonization-4.0.0.war \
+<%= $tomcat_directory %>/webapps/RTMHarmonizationService.war
+
+echo "-- Rapport generation service"
+gradle addReports -b <%= $git_clone_directory %>/service_generation_rapport/build.gradle
+
+cp <%= $git_clone_directory %>/service_generation_rapport/config/RTMRG.xml \
+<%= $tomcat_directory %>/conf/Catalina/localhost/RTMRG.xml
+
+cp <%= $git_clone_directory %>/service_generation_rapport/build/libs/RTMRG.war \
+<%= $tomcat_directory %>/webapps/RTMRG.war
+
+echo "-- Starting tomcat"
+sudo /etc/init.d/tomcat8 start
+

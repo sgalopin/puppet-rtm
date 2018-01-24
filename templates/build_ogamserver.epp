@@ -1,0 +1,68 @@
+#!/bin/bash
+set -e
+set -o pipefail
+
+# Default configuration :
+environment=prod
+composer_path=<%= $docroot_directory %>/..
+
+while [ "x$1" != "x"  ]
+do
+  case "$1" in
+      "--env" | "-e" )
+          shift
+          case $1 in
+            production) environment="prod";;
+            development) environment="dev";;
+            *) environment=$1;;
+          esac
+          shift
+          ;;
+      "--help" | "-h" | * )
+          echo "Install Rtm Server"
+          echo "  Usage : $(basename $0) [options]"
+          echo "    Options :"
+          echo "      -e, --env    : Build environment [dev, prod] (default: « $environment »)"
+          echo "      -h, --help   : Print help information and exit"
+          exit
+          ;;
+  esac
+done
+
+echo "-- Installation of Rtm Server (env=$environment)"
+
+echo "-- Copy the sources into the public directory"
+cp -Tr <%= $git_clone_directory %>/website/htdocs/server/rtmServer $composer_path
+
+#echo "-- Rename the defaut symfony web directory"
+#cp -r $composer_path/web/* <%= $docroot_directory %> && rm -R $composer_path/web
+
+echo "-- Updating of the IP"
+sed -i "s|192.168.50.4|<%= $ipaddress_eth1 %>|" <%= $docroot_directory %>/app_dev.php
+
+echo "-- Set permissions on cache and logs"
+HTTPDUSER=`ps axo user,comm | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1`
+setfacl -R -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX $composer_path/app/cache $composer_path/app/logs $composer_path/app/sessions
+setfacl -dR -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX $composer_path/app/cache $composer_path/app/logs $composer_path/app/sessions
+
+echo "-- Reset of the vendor directory"
+rm -rdf $composer_path/vendor && sudo -u www-data mkdir $composer_path/vendor && sudo chmod g+w $composer_path/vendor
+rm -rdf $composer_path/bin && sudo -u www-data mkdir $composer_path/bin && sudo chmod g+w $composer_path/bin
+
+echo "-- Composer install"
+HOME=/root && export HOME
+case $environment in
+  # prod disabled due to composer misconfiguration (required vendor into dev part)
+  #prod) php $composer_path/composer.phar install --quiet --no-dev;;
+  *) php $composer_path/composer.phar install -d $composer_path --quiet;;
+esac
+
+echo "-- Install assets"
+php $composer_path/app/console assets:install --quiet --no-debug --env=$environment <%= $docroot_directory %>
+php $composer_path/app/console assetic:dump --quiet --no-debug --env=$environment <%= $docroot_directory %>
+php $composer_path/app/console cache:clear --quiet --no-debug --env=$environment
+php $composer_path/app/console cache:warmup --quiet --no-debug --env=$environment
+
+echo "-- Add rights"
+chown -R www-data:www-data <%= $docroot_directory %>
+chmod -R 550 <%= $docroot_directory %>
