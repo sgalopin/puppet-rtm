@@ -7,12 +7,11 @@ class rtm::git (
         ensure   => present,
         provider => svn,
         source   => 'http://ifn-dev.ign.fr/svn/RTM/trunk',
-        excludes => [
-          'documentation/',
-          'Vagrantfile',
-          '.buildpath',
-          '.project',
-          'README.txt',
+        includes => [
+          'Bases SQL/',
+          'mapserver/',
+          'services_configs/',
+          'website/',
         ]
     }
 }
