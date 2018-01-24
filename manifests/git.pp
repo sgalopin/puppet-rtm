@@ -4,6 +4,6 @@ class rtm::git (
     vcsrepo { $git_clone_directory:
         ensure   => present,
         provider => svn,
-        source   => 'svn://ifn-dev/svn/RTM/trunk',
+        source   => 'http://ifn-dev/svn/RTM/trunk',
     }
 }
