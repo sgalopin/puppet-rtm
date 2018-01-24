@@ -7,6 +7,7 @@ class rtm::git (
         ensure   => present,
         provider => svn,
         source   => 'http://ifn-dev.ign.fr/svn/RTM/trunk',
+        # the excludes parameters doesn't work with svn provider
         includes => [
           'Bases SQL/0 - Create harmonized_data schema.sql',
           'Bases SQL/0 - Create mapping schema.sql',
@@ -25,7 +26,13 @@ class rtm::git (
           'mapserver/',
           'services_configs/',
           'website/',
+          'libs_java/',
+          'libs_php/',
+          'service_common',
+          'service_generation_rapport',
+          'service_harmonization',
+          'service_integration',
+          'Service_Java_Generation_de_Rapports',
         ],
-        # the excludes parameters doesn't work with svn provider
     }
 }
