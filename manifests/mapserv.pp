@@ -18,8 +18,8 @@ class rtm::mapserv (
         target => '/usr/lib/cgi-bin/mapserv',
     }
     exec { [  "sed -i 's|vrtm-onf.ifn.fr|${fqdn}|' rtm.map",
-              "sed -i 's|/vagrant/rtm/website/htdocs/logs|${log_directory}|' rtm.map",
-              "sed -i 's|/vagrant/rtm/mapserver|${conf_directory}/mapserver|' rtm.map" ]:
+              "sed -i 's|/vagrant/ogam/website/htdocs/logs|${log_directory}|' rtm.map",
+              "sed -i 's|/vagrant/ogam/mapserver|${conf_directory}/mapserver|' rtm.map" ]:
       path     	=> '/usr/bin:/usr/sbin:/bin',
       cwd 		  => "${conf_directory}/mapserver",
     }
