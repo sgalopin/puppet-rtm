@@ -52,7 +52,7 @@ class rtm::apache (
         docroot_owner => 'www-data',
         docroot_group => 'www-data',
         options => ['Indexes','FollowSymLinks','MultiViews'],
-        directoryindex => 'app.php',
+        directoryindex => 'index.php',
         php_values => {
             'post_max_size' => '200M',
             'upload_max_filesize' => '200M',
@@ -78,10 +78,10 @@ class rtm::apache (
           rewrites => [
             {
               #rewrite_cond => ['%{REQUEST_FILENAME} -s [OR]', '%{REQUEST_FILENAME} -l [OR]', '%{REQUEST_FILENAME} -d'],
-              #rewrite_rule => ['^.*$ - [NC,L]', '^.*$ app.php [NC,L]'],
+              #rewrite_rule => ['^.*$ - [NC,L]', '^.*$ index.php [NC,L]'],
               comment      => 'Redirection to Symfony',
               rewrite_cond => ['%{REQUEST_FILENAME} !-f'],
-              rewrite_rule => ['^(.*)$ app.php [QSA,L]'],
+              rewrite_rule => ['^(.*)$ index.php [QSA,L]'],
             },
           ],
         },{
