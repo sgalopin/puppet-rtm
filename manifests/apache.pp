@@ -96,19 +96,13 @@ class rtm::apache (
 SetEnv MS_MAPFILE \"${conf_directory}/mapserver/rtm.map\"
 SetEnv MS_ERRORFILE \"${log_directory}/mapserver_rtm.log\"
 SetEnv MS_DEBUGLEVEL 5",
-        },{
-          path => "/tilecache-rtm",
-          provider => 'location',
         }],
         aliases => [{
                 alias => '/custom',
                 path  => '/var/www/rtm/custom/public',
             },{
-                scriptalias => '/mapserv-rtm',
+                scriptalias => '/mapserv.rtm',
                 path  => "/usr/lib/cgi-bin/mapserv.fcgi",
-            },{
-                scriptalias => '/tilecache-rtm',
-                path  => "/usr/lib/cgi-bin/tilecache.fcgi",
             }
         ]
     }
