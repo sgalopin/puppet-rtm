@@ -112,19 +112,19 @@ class rtm  {
         log_directory => $log_directory,
         conf_directory => $conf_directory,
     }
-    class {'rtm::sencha':
-        local_scripts_directory => $local_scripts_directory,
-        tmp_directory => $tmp_directory,
-    }
+    #class {'rtm::sencha':
+    #    local_scripts_directory => $local_scripts_directory,
+    #    tmp_directory => $tmp_directory,
+    #}
     class {'rtm::mapserv':
         git_clone_directory => $git_clone_directory,
         conf_directory => $conf_directory,
         log_directory => $log_directory,
     }
-    class {'rtm::tilecache':
-        git_clone_directory => $git_clone_directory,
-        tilecache_directory => $tilecache_directory,
-    }
+    #class {'rtm::tilecache':
+    #    git_clone_directory => $git_clone_directory,
+    #    tilecache_directory => $tilecache_directory,
+    #}
     class {'rtm::tasks':
         docroot_directory => $docroot_directory,
         git_clone_directory => $git_clone_directory,

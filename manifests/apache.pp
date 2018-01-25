@@ -54,8 +54,8 @@ class rtm::apache (
         options => ['Indexes','FollowSymLinks','MultiViews'],
         directoryindex => 'app.php',
         php_values => {
-            'post_max_size' => '100M',
-            'upload_max_filesize' => '100M',
+            'post_max_size' => '200M',
+            'upload_max_filesize' => '200M',
             'opcache.revalidate_freq' => '3',
             'xdebug.default_enable' => 'false',
         },
