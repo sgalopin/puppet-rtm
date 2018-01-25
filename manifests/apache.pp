@@ -80,7 +80,7 @@ class rtm::apache (
               #rewrite_cond => ['%{REQUEST_FILENAME} -s [OR]', '%{REQUEST_FILENAME} -l [OR]', '%{REQUEST_FILENAME} -d'],
               #rewrite_rule => ['^.*$ - [NC,L]', '^.*$ index.php [NC,L]'],
               comment      => 'Redirection to custom',
-              rewrite_cond => ['/vagrant/ogam/website/htdocs/custom/public/$1 -f'],
+              rewrite_cond => ["${docroot_directory}/$1 -f"],
               rewrite_rule => ['^(.+)  /custom/$1 [NC,L]'],
               comment      => 'Redirection to php app',
               rewrite_cond => ['%{REQUEST_FILENAME} !-f'],
@@ -88,11 +88,8 @@ class rtm::apache (
             },
           ],
         },{
-          path => "${docroot_directory}/bundles",
-          custom_fragment => 'RewriteEngine Off',
-        },{
-          path => "${docroot_directory}/RtmDesktop",
-          custom_fragment => 'RewriteEngine Off',
+          path => "${docroot_directory}/../../custom",
+          provider => 'location',
         },{
           path => "/mapserv-rtm",
           provider => 'location',
@@ -106,10 +103,7 @@ SetEnv MS_DEBUGLEVEL 5",
         }],
         aliases => [{
                 alias => '/custom',
-                path  => "${docroot_directory}/../..",
-            },{
-                alias => '/odp',
-                path  => "${docroot_directory}/RtmDesktop",
+                path  => "${docroot_directory}/../../custom",
             },{
                 scriptalias => '/mapserv-rtm',
                 path  => "/usr/lib/cgi-bin/mapserv.fcgi",
