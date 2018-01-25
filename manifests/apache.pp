@@ -80,7 +80,7 @@ class rtm::apache (
               #rewrite_cond => ['%{REQUEST_FILENAME} -s [OR]', '%{REQUEST_FILENAME} -l [OR]', '%{REQUEST_FILENAME} -d'],
               #rewrite_rule => ['^.*$ - [NC,L]', '^.*$ index.php [NC,L]'],
               comment      => 'Redirection to custom',
-              rewrite_cond => ["${docroot_directory}/../../custom/public/$1 -f"],
+              rewrite_cond => ['/var/www/rtm/custom/public/$1 -f'],
               rewrite_rule => ['^(.+) /custom/$1 [QSA,L]'],
               comment      => 'Redirection to php app',
               rewrite_cond => ['%{REQUEST_FILENAME} !-f'],
@@ -88,7 +88,7 @@ class rtm::apache (
             },
           ],
         },{
-          path => "${docroot_directory}/../../custom/public",
+          path => '/var/www/rtm/custom/public',
           provider => 'location',
         },{
           path => "/mapserv-rtm",
@@ -103,7 +103,7 @@ SetEnv MS_DEBUGLEVEL 5",
         }],
         aliases => [{
                 alias => '/custom',
-                path  => "${docroot_directory}/../../custom/public",
+                path  => '/var/www/rtm/custom/public',
             },{
                 scriptalias => '/mapserv-rtm',
                 path  => "/usr/lib/cgi-bin/mapserv.fcgi",
