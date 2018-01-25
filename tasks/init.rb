@@ -5,8 +5,6 @@ require 'puppet'
 
 def service(action, environment)
   case action
-  when "build_db"
-    cmd_string = "/bin/bash /root/tmp/rtm/scripts/build_db.sh -e #{environment}"
   when "build_ogamserver"
     cmd_string = "/bin/bash /root/tmp/rtm/scripts/build_ogamserver.sh -e #{environment}"
   when "build_ogamdesktop"

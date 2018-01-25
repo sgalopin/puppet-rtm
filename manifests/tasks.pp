@@ -6,14 +6,6 @@ class rtm::tasks (
     String $tomcat_directory = '/var/lib/tomcat8',
 ) {
 
-  file { "${local_scripts_directory}/build_db.sh":
-    ensure  => 'file',
-    mode    => '0400',
-    content => epp("${module_name}/build_db.epp", {
-      tmp_directory => $tmp_directory,
-      git_clone_directory => $git_clone_directory
-    }),
-  }
   file { "${local_scripts_directory}/build_ogamserver.sh":
     ensure  => 'file',
     mode    => '0400',
