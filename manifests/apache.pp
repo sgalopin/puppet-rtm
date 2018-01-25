@@ -77,11 +77,10 @@ class rtm::apache (
           options => ['-MultiViews'],
           rewrites => [
             {
-              #rewrite_cond => ['%{REQUEST_FILENAME} -s [OR]', '%{REQUEST_FILENAME} -l [OR]', '%{REQUEST_FILENAME} -d'],
-              #rewrite_rule => ['^.*$ - [NC,L]', '^.*$ index.php [NC,L]'],
               comment      => 'Redirection to custom',
               rewrite_cond => ['/var/www/rtm/custom/public/$1 -f'],
               rewrite_rule => ['^(.+) /custom/$1 [QSA,L]'],
+            },{
               comment      => 'Redirection to php app',
               rewrite_cond => ['%{REQUEST_FILENAME} !-f'],
               rewrite_rule => ['^(.*)$ index.php [QSA,L]'],
