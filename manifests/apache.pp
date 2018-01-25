@@ -32,12 +32,16 @@ class rtm::apache (
     }
 
     # APACHE Modules
-    #include apache::mod::php
+    include apache::mod::php
     include apache::mod::rewrite
     include apache::mod::expires
     include apache::mod::cgi
     include apache::mod::fcgid
-#sed -i "s|short_open_tag = .*|short_open_tag = On|" /etc/php/7.0/apache2/php.ini
+
+    exec { 'sed -i "s|short_open_tag = .*|short_open_tag = On|" /etc/php/7.0/apache2/php.ini':
+      path     	=> '/usr/bin:/usr/sbin:/bin',
+    }
+
     # Parameters
     $vhost_dir= $apache::params::vhost_dir
     $user= $apache::params::user
