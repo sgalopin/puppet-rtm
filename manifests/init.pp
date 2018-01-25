@@ -72,7 +72,6 @@ class rtm  {
     file { [ '/var/www',
              '/var/www/rtm',
              '/var/www/rtm/ogam',
-             '/var/www/rtm/ogam/public',
               $docroot_directory, ]:
         ensure => 'directory',
         #owner => 'www-data',
