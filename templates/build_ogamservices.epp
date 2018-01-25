@@ -27,35 +27,32 @@ done
 echo "-- Installation of Rtm Services (env=$environment)"
 
 echo "-- Stopping tomcat"
-sudo /etc/init.d/tomcat8 stop
+/etc/init.d/tomcat8 stop
 
-echo "-- Integration service"
-gradle war -b <%= $git_clone_directory %>/service_integration/build.gradle
+echo "-- Decompression of the jdk 1.6"
+chmod 700 jdk-6u45-linux-x64.bin
+cd <%= $git_clone_directory %>/services_configs && ./jdk-6u45-linux-x64.bin
 
-cp <%= $git_clone_directory %>/service_integration/config/RTMIntegrationService.xml \
-<%= $tomcat_directory %>/conf/Catalina/localhost/RTMIntegrationService.xml
+echo "-- Build of libs_java"
+cd <%= $git_clone_directory %>/services_configs/libs_java && ant build
 
-cp <%= $git_clone_directory %>/service_integration/build/libs/service_integration-4.0.0.war \
-<%= $tomcat_directory %>/webapps/RTMIntegrationService.war
+echo "-- Build of service_common"
+cd <%= $git_clone_directory %>/services_configs/service_common && ant compile
 
-echo "-- Harmonization service"
-gradle war -b <%= $git_clone_directory %>/service_harmonization/build.gradle
+echo "-- Build of service_generation_rapport"
+cd <%= $git_clone_directory %>/service_generation_rapport && ant deploy
 
-cp <%= $git_clone_directory %>/service_harmonization/config/RTMHarmonizationService.xml \
+echo "-- Build of service_harmonization"
+cd <%= $git_clone_directory %>/services_configs/service_harmonization && ant deploy
+
+echo "-- Build of service_integration"
+cd <%= $git_clone_directory %>/services_configs/service_integration && ant deploy
+
+echo "-- Copy of harmonization service"
+# Must be done per the ant deploy but it's not working and the build file can't be updated (revision fixed)
+cp <%= $git_clone_directory %>/services_configs/service_harmonization/RTMHarmonizationService.xml \
 <%= $tomcat_directory %>/conf/Catalina/localhost/RTMHarmonizationService.xml
 
-cp <%= $git_clone_directory %>/service_harmonization/build/libs/service_harmonization-4.0.0.war \
-<%= $tomcat_directory %>/webapps/RTMHarmonizationService.war
-
-echo "-- Rapport generation service"
-gradle addReports -b <%= $git_clone_directory %>/service_generation_rapport/build.gradle
-
-cp <%= $git_clone_directory %>/service_generation_rapport/config/RTMRG.xml \
-<%= $tomcat_directory %>/conf/Catalina/localhost/RTMRG.xml
-
-cp <%= $git_clone_directory %>/service_generation_rapport/build/libs/RTMRG.war \
-<%= $tomcat_directory %>/webapps/RTMRG.war
-
 echo "-- Starting tomcat"
-sudo /etc/init.d/tomcat8 start
+/etc/init.d/tomcat8 start
 

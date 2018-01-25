@@ -29,15 +29,5 @@ echo "-- Installation of Rtm Desktop (env=$environment)"
 #----------------------------------------------------------------
 # Build the client app
 #----------------------------------------------------------------
-/root/bin/Sencha/Cmd/6.1.3.42/sencha \
---cwd <%= $git_clone_directory %>/website/htdocs/client/rtmDesktop \
-app build -e $environment
-
-#----------------------------------------------------------------
-# Copy the client app into the public dir
-#----------------------------------------------------------------
-cp -Tr \
-<%= $git_clone_directory %>/website/htdocs/client/build/$environment/RtmDesktop \
-<%= $docroot_directory %>/RtmDesktop
-chown -R www-data:www-data <%= $docroot_directory %>/RtmDesktop
-chmod g+w <%= $docroot_directory %>/RtmDesktop
+echo "-- Compress CSS and JS files"
+cd <%= $git_clone_directory %>/website && ant compressCssAndJs

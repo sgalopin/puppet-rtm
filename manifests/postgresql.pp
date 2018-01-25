@@ -28,7 +28,7 @@ class rtm::postgresql (
 		postgresql::server::pg_hba_rule { 'allow application network to access app database':
 				description => "Open up PostgreSQL for access from 127.0.0.1/32",
 				type        => 'host',
-				database    => 'rtm',
+				database    => 'bdrtm',
 				user        => 'rtm',
 				address     => '192.168.50.13/32',
 				auth_method => 'md5',
@@ -44,7 +44,7 @@ class rtm::postgresql (
 
 		file { '/root/.pgpass':
 	    ensure  => 'file',
-	    content => "localhost:5432:rtm:${user}:${password}\nlocalhost:5432:template1:${user}:${password}",
+	    content => "localhost:5432:bdrtm:${user}:${password}\nlocalhost:5432:template1:${user}:${password}",
 	    mode    => '0600',
 	  }
 }
