@@ -31,9 +31,17 @@ done
 
 echo "-- Installation of Rtm Server (env=$environment)"
 
+echo "-- Build php and js app"
+sed -i 's|<exclude name="\*\*/application/configs/\*" />||' <%= $git_clone_directory %>/website/build.xml
+sed -i 's|<exclude name="\*\*/application/configs/\*\*" />||' <%= $git_clone_directory %>/website/build.xml
+cd <%= $git_clone_directory %>/website && ant deployWebSite
+# Deploy directories :
+# cps.js.pack.path = ./htdocs/ogam/public/js/genapp/genapp.pack.js
+# cps.css.pack.path = ./htdocs/ogam/public/js/genapp/resources/css/genapp.pack.css
+
 echo "-- Copy the sources into the public directory"
-cp -Tr <%= $git_clone_directory %>/website/htdocs $www_rtm
+cd $www_rtm && rm -rdf *
+cp -Tr /tmpdist/edb $www_rtm
 
 echo "-- Add rights"
-chown -R www-data:www-data <%= $docroot_directory %>
-chmod -R 770 <%= $docroot_directory %>
+chown -R www-data:www-data $www_rtm && chmod -R 770 $www_rtm

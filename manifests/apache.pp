@@ -79,7 +79,10 @@ class rtm::apache (
             {
               #rewrite_cond => ['%{REQUEST_FILENAME} -s [OR]', '%{REQUEST_FILENAME} -l [OR]', '%{REQUEST_FILENAME} -d'],
               #rewrite_rule => ['^.*$ - [NC,L]', '^.*$ index.php [NC,L]'],
-              comment      => 'Redirection to Symfony',
+              comment      => 'Redirection to custom',
+              rewrite_cond => ['/vagrant/ogam/website/htdocs/custom/public/$1 -f'],
+              rewrite_rule => ['^(.+)  /custom/$1 [NC,L]'],
+              comment      => 'Redirection to php app',
               rewrite_cond => ['%{REQUEST_FILENAME} !-f'],
               rewrite_rule => ['^(.*)$ index.php [QSA,L]'],
             },
@@ -101,8 +104,10 @@ SetEnv MS_DEBUGLEVEL 5",
           path => "/tilecache-rtm",
           provider => 'location',
         }],
-        aliases => [
-            {
+        aliases => [{
+                alias => '/custom',
+                path  => "${docroot_directory}/../..",
+            },{
                 alias => '/odp',
                 path  => "${docroot_directory}/RtmDesktop",
             },{
