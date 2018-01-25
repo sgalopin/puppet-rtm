@@ -26,6 +26,9 @@ class rtm::apache (
                 provider => 'apt',
             },
         },
+        settings   => {
+          'PHP/short_open_tag'  => 'On',
+        },
     }
 
     # APACHE Modules
