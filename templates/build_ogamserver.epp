@@ -34,6 +34,8 @@ echo "-- Installation of Rtm Server (env=$environment)"
 echo "-- Build php and js app"
 sed -i 's|<exclude name="\*\*/application/configs/\*" />||' <%= $git_clone_directory %>/website/build.xml
 sed -i 's|<exclude name="\*\*/application/configs/\*\*" />||' <%= $git_clone_directory %>/website/build.xml
+sed -i 's|resources.session.cookie_domain = ".ifn.fr"|resources.session.cookie_domain = ".example.com"|' <%= $git_clone_directory %>/website/htdocs/custom/application/configs/application.ini
+sed -i 's|vrtm-onf.ifn.fr|<%= $fqdn %>|' <%= $git_clone_directory %>/website/htdocs/custom/application/configs/app.ini
 cd <%= $git_clone_directory %>/website && ant deployWebSite
 # Deploy directories :
 # cps.js.pack.path = ./htdocs/ogam/public/js/genapp/genapp.pack.js

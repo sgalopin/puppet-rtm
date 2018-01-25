@@ -90,7 +90,7 @@ class rtm::apache (
           path => '/var/www/rtm/custom/public',
           provider => 'location',
         },{
-          path => "/mapserv-rtm",
+          path => "/cgi-bin/mapserv.rtm",
           provider => 'location',
           custom_fragment => "
 SetEnv MS_MAPFILE \"${conf_directory}/mapserver/rtm.map\"
@@ -101,7 +101,7 @@ SetEnv MS_DEBUGLEVEL 5",
                 alias => '/custom',
                 path  => '/var/www/rtm/custom/public',
             },{
-                scriptalias => '/mapserv.rtm',
+                scriptalias => '/cgi-bin/mapserv.rtm',
                 path  => "/usr/lib/cgi-bin/mapserv.fcgi",
             }
         ]
