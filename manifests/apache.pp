@@ -27,17 +27,17 @@ class rtm::apache (
             },
         },
         settings   => {
-          'PHP/short_open_tag'  => 'On',
+          'PHP/short_open_tag'  => 'On', # Doesn't work...
         },
     }
 
     # APACHE Modules
-    include apache::mod::php
+    #include apache::mod::php
     include apache::mod::rewrite
     include apache::mod::expires
     include apache::mod::cgi
     include apache::mod::fcgid
-
+#sed -i "s|short_open_tag = .*|short_open_tag = On|" /etc/php/7.0/apache2/php.ini
     # Parameters
     $vhost_dir= $apache::params::vhost_dir
     $user= $apache::params::user
