@@ -30,8 +30,8 @@ echo "-- Stopping tomcat"
 /etc/init.d/tomcat8 stop
 
 echo "-- Decompression of the jdk 1.6"
-chmod 700 jdk-6u45-linux-x64.bin
-cd <%= $git_clone_directory %>/services_configs && ./jdk-6u45-linux-x64.bin
+cd <%= $git_clone_directory %>/services_configs
+chmod 700 jdk-6u45-linux-x64.bin && ./jdk-6u45-linux-x64.bin
 
 echo "-- Build of libs_java"
 cd <%= $git_clone_directory %>/services_configs/libs_java && ant build
