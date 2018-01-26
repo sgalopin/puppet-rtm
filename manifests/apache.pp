@@ -48,10 +48,10 @@ class rtm::apache (
     $group= $apache::params::group
 
     # Virtual host with apache
-    apache::vhost { 'agent1.example.com':
+    apache::vhost { $fqdn:
         servername => 'example.com',
         serveraliases => [
-          'agent1.example.com',
+          $fqdn,
         ],
         port    => '80',
         docroot => $docroot_directory,
