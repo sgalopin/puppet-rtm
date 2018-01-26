@@ -30,7 +30,7 @@ class rtm::postgresql (
 				type        => 'host',
 				database    => 'bdrtm',
 				user        => 'rtm',
-				address     => '192.168.50.13/32',
+				address     => "${ipaddress_eth1}/32",
 				auth_method => 'md5',
 		}
 		postgresql::server::pg_hba_rule { 'allow admin user to access app database':
