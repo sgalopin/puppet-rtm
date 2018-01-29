@@ -13,6 +13,10 @@ class rtm::git (
     #     source   => 'http://ifn-dev.ign.fr/svn/RTM/trunk',
     # }
 
+    exec { "sudo sed -i '$ a 172.27.5.200 ifn-dev' /etc/hosts":
+      path    => '/usr/bin:/usr/sbin:/bin',
+      unless  => 'cat /etc/hosts | grep ifn-dev',
+    }
     exec { "svn co http://ifn-dev.ign.fr/svn/RTM/trunk ${git_clone_directory}":
       path    => '/usr/bin:/usr/sbin:/bin',
       unless  => "test -f ${git_clone_directory}/README.txt",
