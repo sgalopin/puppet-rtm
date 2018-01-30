@@ -23,14 +23,13 @@ class rtm::apache (
     include apache::mod::expires
     include apache::mod::cgi
     include apache::mod::fcgid
-    include apache::mod::php
-    ->
+    apache::mod { 'php': }->
     exec { [
       'sed -i "s|short_open_tag = .*|short_open_tag = On|" /etc/php/7.0/apache2/php.ini',
       'sed -i "s|;extension=php_pdo_pgsql.dll|extension=php_pdo_pgsql.dll|" /etc/php/7.0/apache2/php.ini',
       'sed -i "s|;extension=php_pgsql.dll|extension=php_pgsql.dll|" /etc/php/7.0/apache2/php.ini',
       ]:
-      path     	=> '/usr/bin:/usr/sbin:/bin',
+      path => '/usr/bin:/usr/sbin:/bin',
     }
 
     # APACHE Virtual host
