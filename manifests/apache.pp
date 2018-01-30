@@ -3,6 +3,9 @@ class rtm::apache (
     String $log_directory = '/var/log/rtm',
     String $conf_directory = '/etc/rtm',
 ) {
+    $enhancers = [ 'php-xml', 'php-pgsql' ]
+    package { $enhancers: ensure => 'installed' }
+
     # APACHE
     class { 'apache': # contains package['httpd'] and service['httpd']
         default_vhost => false,
@@ -12,7 +15,7 @@ class rtm::apache (
     include apache::params # contains common config settings
 
     # PHP (mayflower/php)
-    class { '::php':
+    /*class { '::php':
         ensure       => latest,
         manage_repos => true, # The default is to have php::manage_repos enabled to add apt sources for Dotdeb on Debian and ppa:ondrej/php5 on Ubuntu with packages for the current stable PHP version closely tracking upstream.
         fpm          => false,
@@ -29,18 +32,24 @@ class rtm::apache (
         settings   => {
           'PHP/short_open_tag'  => 'On', # Doesn't work...
         },
-    }
+    }*/
 
     # APACHE Modules
-    include apache::mod::php
     include apache::mod::rewrite
     include apache::mod::expires
     include apache::mod::cgi
     include apache::mod::fcgid
-
+    apache::mod::php {
+        content => '
+short_open_tag = On
+extension=php_pdo_pgsql.dll
+extension=php_pgsql.dll
+',
+    }
+    /*->
     exec { 'sed -i "s|short_open_tag = .*|short_open_tag = On|" /etc/php/7.0/apache2/php.ini':
       path     	=> '/usr/bin:/usr/sbin:/bin',
-    }
+    }*/
 
     # Parameters
     $vhost_dir= $apache::params::vhost_dir
