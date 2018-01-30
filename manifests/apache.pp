@@ -6,57 +6,34 @@ class rtm::apache (
     $enhancers = [ 'php-xml', 'php-pgsql' ]
     package { $enhancers: ensure => 'installed' }
 
-    # APACHE
+    # APACHE Parameters
+    include apache::params # contains common config settings
+    $vhost_dir= $apache::params::vhost_dir
+    $user= $apache::params::user
+    $group= $apache::params::group
+
+    # APACHE Install
     class { 'apache': # contains package['httpd'] and service['httpd']
         default_vhost => false,
         mpm_module => 'prefork', # required per the php module
     }
-
-    include apache::params # contains common config settings
-
-    # PHP (mayflower/php)
-    /*class { '::php':
-        ensure       => latest,
-        manage_repos => true, # The default is to have php::manage_repos enabled to add apt sources for Dotdeb on Debian and ppa:ondrej/php5 on Ubuntu with packages for the current stable PHP version closely tracking upstream.
-        fpm          => false,
-        dev          => false,
-        composer     => false,
-        pear         => false,
-        phpunit      => true,
-        extensions => {
-            xml      => {}, # For phpunit via composer
-            pgsql => {
-                provider => 'apt',
-            },
-        },
-        settings   => {
-          'PHP/short_open_tag'  => 'On', # Doesn't work...
-        },
-    }*/
 
     # APACHE Modules
     include apache::mod::rewrite
     include apache::mod::expires
     include apache::mod::cgi
     include apache::mod::fcgid
-    apache::mod::php {
-        content => '
-short_open_tag = On
-extension=php_pdo_pgsql.dll
-extension=php_pgsql.dll
-',
-    }
-    /*->
-    exec { 'sed -i "s|short_open_tag = .*|short_open_tag = On|" /etc/php/7.0/apache2/php.ini':
+    include apache::mod::php
+    ->
+    exec { [
+      'sed -i "s|short_open_tag = .*|short_open_tag = On|" /etc/php/7.0/apache2/php.ini',
+      'sed -i "s|;extension=php_pdo_pgsql.dll|extension=php_pdo_pgsql.dll|" /etc/php/7.0/apache2/php.ini',
+      'sed -i "s|;extension=php_pgsql.dll|extension=php_pgsql.dll|" /etc/php/7.0/apache2/php.ini',
+      ]:
       path     	=> '/usr/bin:/usr/sbin:/bin',
-    }*/
+    }
 
-    # Parameters
-    $vhost_dir= $apache::params::vhost_dir
-    $user= $apache::params::user
-    $group= $apache::params::group
-
-    # Virtual host with apache
+    # APACHE Virtual host
     apache::vhost { $fqdn:
         servername => 'example.com',
         serveraliases => [
@@ -85,10 +62,6 @@ extension=php_pgsql.dll
         directories => [{
           path => $docroot_directory,
           override => 'None',
-          # Version < 2.3
-          #order => 'Allow,Deny',
-          #allow => 'from All',
-          # Version >= 2.3
           require => 'all granted',
           options => ['-MultiViews'],
           rewrites => [
