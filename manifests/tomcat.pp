@@ -7,17 +7,12 @@ class rtm::tomcat (
     package { $enhancers: ensure => 'installed' }
     # Note: 'libpostgresql-jdbc-java' already installed with postgresql
 
+    # Note: The tomcat8 user, the service and the default instance
+    # are done via the installation of the package
     tomcat::install { $tomcat_directory:
         install_from_source => false,
         package_ensure => 'present',
         package_name => 'tomcat8',
-        #source_url => 'https://www.apache.org/dist/tomcat/tomcat-8/v8.5.24/bin/apache-tomcat-8.5.24.tar.gz',
-    }->
-    tomcat::instance { 'tomcat8':
-        user => 'tomcat8',
-        group => 'tomcat8',
-        catalina_home => $tomcat_directory,
-        manage_service => true,
     }->
     file { "${tomcat_directory}/lib":
         ensure  => directory,
@@ -35,8 +30,7 @@ class rtm::tomcat (
         target => '/usr/share/java/postgresql-jdbc4.jar',
         owner => 'tomcat8',
         group => 'tomcat8',
-    }
-
+    }->
     file { "${tmp_directory}/rtm_upload":
         ensure  => directory,
         owner => 'tomcat8',
