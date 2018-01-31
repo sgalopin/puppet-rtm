@@ -1,6 +1,6 @@
 {
   "name": "puppet-rtm",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "author": "sgalopin",
   "summary": "Installs, configures, and manages RTM virtual hosts, web services, and modules.",
   "license": "AGPL-3.0",
@@ -16,8 +16,7 @@
     {"name":"puppetlabs-vcsrepo","version_requirement":">= 2.2.0"},
     {"name":"puppetlabs-java","version_requirement":">= 2.3.0"},
     {"name":"puppetlabs-tomcat","version_requirement":">= 2.1.0"},
-    {"name":"puppetlabs-postgresql","version_requirement":">= 5.2.1"},
-    {"name":"mayflower-php","version_requirement":">= 4.0.0-beta1"}
+    {"name":"puppetlabs-postgresql","version_requirement":">= 5.2.1"}
   ],
   "data_provider": null,
   "operatingsystem_support": [
