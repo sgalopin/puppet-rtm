@@ -3,17 +3,18 @@ class rtm::apache (
     String $log_directory = '/var/log/rtm',
     String $conf_directory = '/etc/rtm',
 ) {
-  package { [ 'libapache2-mod-php7.0', 'php-xml', 'php-pgsql' ]:
-    ensure => 'installed'
-  }->
     # APACHE Install
     class { 'apache': # contains package['httpd'] and service['httpd']
         default_vhost => false,
         mpm_module => 'prefork', # required per the php module
-    }->
+    }
 
     # APACHE Modules
-    /*class { 'apache::mod::php': }->*/
+    # 'libapache2-mod-php7.0' package required on debian (stretch) to avoid a bug... (but not on ubuntu-16.04)
+    package { [ 'libapache2-mod-php7.0', 'php-xml', 'php-pgsql' ]:
+      ensure => 'installed'
+    }->
+    class { 'apache::mod::php': }->
     exec { [
       'sed -i "s|short_open_tag = .*|short_open_tag = On|" /etc/php/7.0/apache2/php.ini',
       'sed -i "s|;extension=php_pdo_pgsql.dll|extension=php_pdo_pgsql.dll|" /etc/php/7.0/apache2/php.ini',
@@ -21,20 +22,16 @@ class rtm::apache (
       ]:
       path => '/usr/bin:/usr/sbin:/bin',
     }
-    /*->
-    package { [ 'php-xml', 'php-pgsql' ]:
-      ensure => 'installed'
-    }*/
     include apache::mod::rewrite
     include apache::mod::expires
     include apache::mod::cgi
     include apache::mod::fcgid
 
     # APACHE Parameters
-    /*include apache::params # contains common config settings
-    $vhost_dir= $apache::params::vhost_dir
-    $user= $apache::params::user
-    $group= $apache::params::group*/
+    # include apache::params # contains common config settings
+    # $vhost_dir= $apache::params::vhost_dir
+    # $user= $apache::params::user
+    # $group= $apache::params::group
 
     # APACHE Virtual host
     apache::vhost { $fqdn:
