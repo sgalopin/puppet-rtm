@@ -27,9 +27,10 @@ class rtm::apache (
       'sed -i "s|;extension=php_pgsql.dll|extension=php_pgsql.dll|" /etc/php/7.0/apache2/php.ini',
       ]:
       path => '/usr/bin:/usr/sbin:/bin',
+    }->
+    package { [ 'php-xml', 'php-pgsql' ]:
+      ensure => 'installed'
     }
-    $enhancers = [ 'php-xml', 'php-pgsql' ]
-    package { $enhancers: ensure => 'installed' }
 
     # APACHE Virtual host
     apache::vhost { $fqdn:
