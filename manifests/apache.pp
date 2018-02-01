@@ -3,9 +3,6 @@ class rtm::apache (
     String $log_directory = '/var/log/rtm',
     String $conf_directory = '/etc/rtm',
 ) {
-    $enhancers = [ 'php-xml', 'php-pgsql' ]
-    package { $enhancers: ensure => 'installed' }
-
     # APACHE Parameters
     include apache::params # contains common config settings
     $vhost_dir= $apache::params::vhost_dir
@@ -31,6 +28,8 @@ class rtm::apache (
       ]:
       path => '/usr/bin:/usr/sbin:/bin',
     }
+    $enhancers = [ 'php-xml', 'php-pgsql' ]
+    package { $enhancers: ensure => 'installed' }
 
     # APACHE Virtual host
     apache::vhost { $fqdn:

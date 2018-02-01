@@ -7,9 +7,9 @@ class rtm::postgresql (
 
     class { 'postgresql::globals':
         encoding => 'UTF-8',
-        #manage_package_repo => true,
-        version             => '9.5',
-        postgis_version     => '2.2',
+        #manage_package_repo => true, # Sets up official PostgreSQL repositories on your host if set to true.
+        #version             => '9.5',
+        #postgis_version     => '2.2',
     }->
     class { 'postgresql::server':
         listen_addresses => "127.0.0.1,192.168.50.1,${ipaddress_eth1}",
