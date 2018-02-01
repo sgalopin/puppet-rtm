@@ -3,23 +3,13 @@ class rtm::apache (
     String $log_directory = '/var/log/rtm',
     String $conf_directory = '/etc/rtm',
 ) {
-    # APACHE Parameters
-    include apache::params # contains common config settings
-    $vhost_dir= $apache::params::vhost_dir
-    $user= $apache::params::user
-    $group= $apache::params::group
-
     # APACHE Install
     class { 'apache': # contains package['httpd'] and service['httpd']
         default_vhost => false,
         mpm_module => 'prefork', # required per the php module
-    }
+    }->
 
     # APACHE Modules
-    include apache::mod::rewrite
-    include apache::mod::expires
-    include apache::mod::cgi
-    include apache::mod::fcgid
     class { 'apache::mod::php': }->
     exec { [
       'sed -i "s|short_open_tag = .*|short_open_tag = On|" /etc/php/7.0/apache2/php.ini',
@@ -31,7 +21,17 @@ class rtm::apache (
     package { [ 'php-xml', 'php-pgsql' ]:
       ensure => 'installed'
     }
+    include apache::mod::rewrite
+    include apache::mod::expires
+    include apache::mod::cgi
+    include apache::mod::fcgid
 
+    # APACHE Parameters
+    include apache::params # contains common config settings
+    $vhost_dir= $apache::params::vhost_dir
+    $user= $apache::params::user
+    $group= $apache::params::group
+    
     # APACHE Virtual host
     apache::vhost { $fqdn:
         servername => 'example.com',
