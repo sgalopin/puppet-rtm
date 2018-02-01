@@ -3,14 +3,14 @@ class rtm::apache (
     String $log_directory = '/var/log/rtm',
     String $conf_directory = '/etc/rtm',
 ) {
-  package { [ 'apache2', 'libapache2-mod-php7.0', 'php-xml', 'php-pgsql' ]:
+  package { [ 'libapache2-mod-php7.0', 'php-xml', 'php-pgsql' ]:
     ensure => 'installed'
   }->
     # APACHE Install
-    /*class { 'apache': # contains package['httpd'] and service['httpd']
+    class { 'apache': # contains package['httpd'] and service['httpd']
         default_vhost => false,
         mpm_module => 'prefork', # required per the php module
-    }*/
+    }->
 
     # APACHE Modules
     /*class { 'apache::mod::php': }->*/
