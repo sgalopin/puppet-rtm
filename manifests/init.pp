@@ -90,7 +90,8 @@ class rtm  {
         group => 'www-data',
         mode    => '0770',
     }
-    file { $service_upload_directory:
+    file { [ '/var/tmp/rtm',
+             $service_upload_directory ]:
         ensure  => directory,
         group => 'tomcat8',
         mode    => '770',
