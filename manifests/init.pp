@@ -42,7 +42,9 @@
 #
 # Copyright 2018 Your name here, unless otherwise noted.
 #
-class rtm  {
+class rtm (
+    String $domain = 'example.com',
+) {
 
     package { 'unzip': ensure => 'installed' }
 
@@ -50,6 +52,7 @@ class rtm  {
     $git_clone_directory      = '/root/tmp/rtm/sources'
     $local_scripts_directory  = '/root/tmp/rtm/scripts'
     $conf_directory           = '/etc/rtm'
+    $www_directory            = '/var/www/rtm'
     $docroot_directory        = '/var/www/rtm/ogam/public'
     $tilecache_directory      = '/var/www/tilecache'
     # If you set the server upload dir to a subdir into /var/tmp be aware of the apache service "PrivateTmp" parameter
@@ -72,9 +75,9 @@ class rtm  {
         mode    => '0750',
     }
     file { [ '/var/www',
-             '/var/www/rtm',
-             '/var/www/rtm/ogam',
-              $docroot_directory, ]:
+             $www_directory,
+             "${domain}/ogam",
+             $docroot_directory, ]:
         ensure => 'directory',
         group => 'www-data',
         mode => '0750'
@@ -131,6 +134,7 @@ class rtm  {
         docroot_directory => $docroot_directory,
         git_clone_directory => $git_clone_directory,
         local_scripts_directory => $local_scripts_directory,
+        www_directory => $www_directory,
         server_upload_directory  => $server_upload_directory,
         service_upload_directory => $service_upload_directory,
         tomcat_directory => $tomcat_directory,

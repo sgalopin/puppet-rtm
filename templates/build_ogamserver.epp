@@ -4,7 +4,7 @@ set -o pipefail
 
 # Default configuration :
 environment=prod
-www_rtm=/var/www/rtm
+www_rtm=<%= $www_directory %>
 
 while [ "x$1" != "x"  ]
 do
@@ -34,9 +34,9 @@ echo "-- Installation of Rtm Server (env=$environment)"
 echo "-- Build php and js app"
 sed -i 's|<exclude name="\*\*/application/configs/\*" />||' <%= $git_clone_directory %>/website/build.xml
 sed -i 's|<exclude name="\*\*/application/configs/\*\*" />||' <%= $git_clone_directory %>/website/build.xml
-sed -i 's|resources.session.cookie_domain = ".ifn.fr"|resources.session.cookie_domain = ".example.com"|' <%= $git_clone_directory %>/website/htdocs/custom/application/configs/application.ini
+sed -i 's|resources.session.cookie_domain = ".ifn.fr"|resources.session.cookie_domain = ".<%= $domain %>"|' <%= $git_clone_directory %>/website/htdocs/custom/application/configs/application.ini
 sed -i 's|vrtm-onf.ifn.fr|<%= $fqdn %>|' <%= $git_clone_directory %>/website/htdocs/custom/application/configs/app.ini
-sed -i 's|/vagrant/ogam/website/htdocs/upload|/var/tmp/rtm/upload|' <%= $git_clone_directory %>/website/htdocs/custom/application/configs/app.ini
+sed -i 's|/vagrant/ogam/website/htdocs/upload|<%= $server_upload_directory %>|' <%= $git_clone_directory %>/website/htdocs/custom/application/configs/app.ini
 cd <%= $git_clone_directory %>/website && ant deployWebSite
 # Deploy directories :
 # cps.js.pack.path = ./htdocs/ogam/public/js/genapp/genapp.pack.js
@@ -47,4 +47,5 @@ cd $www_rtm && rm -rdf *
 cp -Tr /tmpdist/edb $www_rtm
 
 echo "-- Add rights"
-chown -R www-data:www-data $www_rtm && chmod -R 770 $www_rtm
+chown -R www-data:www-data $www_rtm && chmod -R 750 $www_rtm
+chown -R www-data:www-data $www_rtm && chmod -R 770 <%= $server_upload_directory %>
