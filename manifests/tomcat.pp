@@ -1,5 +1,4 @@
 class rtm::tomcat (
-    String $tmp_directory = '/var/tmp/rtm',
     String $git_clone_directory = '/root/tmp/rtm/sources',
     String $tomcat_directory = '/var/lib/tomcat8',
 ) {
@@ -30,19 +29,6 @@ class rtm::tomcat (
         target => '/usr/share/java/postgresql-jdbc4.jar',
         owner => 'tomcat8',
         group => 'tomcat8',
-    }->
-    file { "${tmp_directory}/rtm_upload":
-        ensure  => directory,
-        owner => 'tomcat8',
-        group => 'tomcat8',
-        mode    => '774',
-    }
-    file { [ "${tmp_directory}/upload",
-             "${tmp_directory}/upload/images", ]:
-        ensure  => directory,
-        owner => 'www-data',
-        group => 'www-data',
-        mode    => '774',
     }
 
     # Example of deployment (Integration service)

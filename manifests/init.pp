@@ -52,7 +52,9 @@ class rtm  {
     $conf_directory           = '/etc/rtm'
     $docroot_directory        = '/var/www/rtm/ogam/public'
     $tilecache_directory      = '/var/www/tilecache'
-    $tmp_directory            = '/var/tmp/rtm'
+    # If you set the server upload dir to a subdir into /var/tmp be aware of the apache service "PrivateTmp" parameter
+    $server_upload_directory  = '/var/www/rtm/upload'
+    $service_upload_directory = '/var/tmp/rtm/service_upload'
     $log_directory            = '/var/log/rtm'
     $tomcat_directory         = '/var/lib/tomcat8'
 
@@ -74,9 +76,8 @@ class rtm  {
              '/var/www/rtm/ogam',
               $docroot_directory, ]:
         ensure => 'directory',
-        #owner => 'www-data',
         group => 'www-data',
-        mode => '0770'
+        mode => '0750'
     }
     file { [  $tilecache_directory,
               "${tilecache_directory}/cache", ]:
@@ -84,15 +85,21 @@ class rtm  {
         group => 'www-data',
         mode    => '0770',
     }
-    file { $tmp_directory:
-        ensure  => directory,
-        group => 'www-data',
-        mode    => '0771',
-    }
     file { $log_directory:
         ensure  => directory,
         group => 'www-data',
         mode    => '0770',
+    }
+    file { $service_upload_directory:
+        ensure  => directory,
+        group => 'tomcat8',
+        mode    => '770',
+    }
+    file { [ $server_upload_directory,
+             "${server_upload_directory}/images", ]:
+        ensure  => directory,
+        group => 'www-data',
+        mode    => '770',
     }
 
     # Class
@@ -101,12 +108,10 @@ class rtm  {
         git_clone_directory => $git_clone_directory
     }
     class {'rtm::postgresql':
-        git_clone_directory => $git_clone_directory,
-        tmp_directory => $tmp_directory,
+        git_clone_directory => $git_clone_directory
     }
     class {'rtm::tomcat':
         git_clone_directory => $git_clone_directory,
-        tmp_directory => $tmp_directory,
     }
     class {'rtm::apache':
         docroot_directory => $docroot_directory,
@@ -122,7 +127,8 @@ class rtm  {
         docroot_directory => $docroot_directory,
         git_clone_directory => $git_clone_directory,
         local_scripts_directory => $local_scripts_directory,
-        tmp_directory => $tmp_directory,
+        server_upload_directory  => $server_upload_directory,
+        service_upload_directory => $service_upload_directory,
         tomcat_directory => $tomcat_directory,
     }
 }

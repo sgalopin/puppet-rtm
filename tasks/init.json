@@ -4,11 +4,7 @@
   "parameters": {
     "action": {
       "description": "Action to perform ",
-      "type": "Enum[build_ogamserver, build_ogamdesktop, build_ogamservices]"
-    },
-    "environment": {
-      "description": "Action's environment ",
-      "type": "Enum[development, production]"
+      "type": "Enum[build_db, build_ogamserver, build_ogamservices]"
     }
   }
 }

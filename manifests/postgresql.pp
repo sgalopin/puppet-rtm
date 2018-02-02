@@ -1,6 +1,5 @@
 class rtm::postgresql (
 		String $git_clone_directory = '/root/tmp/rtm/sources',
-		String $tmp_directory = '/var/tmp/rtm',
 ) {
     $user = 'postgres'
 		$password = 'bAz5<b{dYBC]A#q['
