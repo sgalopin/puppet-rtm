@@ -80,7 +80,7 @@ class rtm (
              $docroot_directory, ]:
         ensure => 'directory',
         group => 'www-data',
-        mode => '0750'
+        mode => '0770'
     }
     file { [  $tilecache_directory,
               "${tilecache_directory}/cache", ]:
@@ -97,7 +97,7 @@ class rtm (
              "${server_upload_directory}/images", ]:
         ensure  => directory,
         group => 'www-data',
-        mode    => '770',
+        mode    => '0770',
     }
     group { 'tomcat8':
         ensure => 'present',
@@ -106,7 +106,7 @@ class rtm (
              $service_upload_directory ]:
         ensure  => directory,
         group => 'tomcat8',
-        mode    => '770',
+        mode    => '0770',
     }
 
     # Class

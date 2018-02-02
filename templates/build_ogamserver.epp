@@ -47,5 +47,4 @@ cd $www_rtm && rm -rdf *
 cp -Tr /tmpdist/edb $www_rtm
 
 echo "-- Add rights"
-chown -R www-data:www-data $www_rtm && chmod -R 750 $www_rtm
-chown -R www-data:www-data $www_rtm && chmod -R 770 <%= $server_upload_directory %>
+chown -R www-data:www-data $www_rtm && chmod -R 770 $www_rtm

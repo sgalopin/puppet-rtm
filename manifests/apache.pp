@@ -65,7 +65,7 @@ class rtm::apache (
           rewrites => [
             {
               comment      => 'Redirection to custom',
-              rewrite_cond => ["${www_directory}/custom/public/$1 -f"],
+              rewrite_cond => ["${www_directory}/custom/public/\$1 -f"],
               rewrite_rule => ['^(.+) /custom/$1 [QSA,L]'],
             },{
               comment      => 'Redirection to php app',
