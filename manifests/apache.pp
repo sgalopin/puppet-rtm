@@ -1,4 +1,5 @@
 class rtm::apache (
+    String $www_directory = '/var/www/rtm',
     String $docroot_directory = '/var/www/rtm/web',
     String $log_directory = '/var/log/rtm',
     String $conf_directory = '/etc/rtm',
@@ -64,7 +65,7 @@ class rtm::apache (
           rewrites => [
             {
               comment      => 'Redirection to custom',
-              rewrite_cond => ["${domain}/custom/public/$1 -f"],
+              rewrite_cond => ["${www_directory}/custom/public/$1 -f"],
               rewrite_rule => ['^(.+) /custom/$1 [QSA,L]'],
             },{
               comment      => 'Redirection to php app',
@@ -73,7 +74,7 @@ class rtm::apache (
             },
           ],
         },{
-          path => "${domain}/custom/public",
+          path => "${www_directory}/custom/public",
           provider => 'location',
         },{
           path => "/cgi-bin/mapserv.rtm",
@@ -85,7 +86,7 @@ SetEnv MS_DEBUGLEVEL 5",
         }],
         aliases => [{
                 alias => '/custom',
-                path  => "${domain}/custom/public",
+                path  => "${www_directory}/custom/public",
             },{
                 scriptalias => '/cgi-bin/mapserv.rtm',
                 path  => "/usr/lib/cgi-bin/mapserv.fcgi",

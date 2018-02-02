@@ -76,7 +76,7 @@ class rtm (
     }
     file { [ '/var/www',
              $www_directory,
-             "${domain}/ogam",
+             "${www_directory}/ogam",
              $docroot_directory, ]:
         ensure => 'directory',
         group => 'www-data',
@@ -121,6 +121,7 @@ class rtm (
         git_clone_directory => $git_clone_directory,
     }
     class {'rtm::apache':
+        www_directory => $www_directory,
         docroot_directory => $docroot_directory,
         log_directory => $log_directory,
         conf_directory => $conf_directory,
