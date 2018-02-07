@@ -43,7 +43,8 @@
 # Copyright 2018 Your name here, unless otherwise noted.
 #
 class rtm (
-    String $domain = 'example.com',
+    String $vhost_servername = 'agent.example.com',
+    String $cookie_domain = '.example.com',
     String $admin_ip_address = "192.168.50.1",
     String $host_ip_address = $ipaddress_eth1,
     String $pg_user = 'postgres',
@@ -133,11 +134,13 @@ class rtm (
         docroot_directory => $docroot_directory,
         log_directory => $log_directory,
         conf_directory => $conf_directory,
+        vhost_servername => $vhost_servername,
     }
     class {'rtm::mapserv':
         git_clone_directory => $git_clone_directory,
         conf_directory => $conf_directory,
         log_directory => $log_directory,
+        vhost_servername => $vhost_servername,
     }
     class {'rtm::tasks':
         docroot_directory => $docroot_directory,
@@ -147,5 +150,7 @@ class rtm (
         server_upload_directory  => $server_upload_directory,
         service_upload_directory => $service_upload_directory,
         tomcat_directory => $tomcat_directory,
+        vhost_servername => $vhost_servername,
+        cookie_domain => $cookie_domain,
     }
 }

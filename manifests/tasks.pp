@@ -6,7 +6,8 @@ class rtm::tasks (
     String $server_upload_directory = '/var/www/rtm/upload',
     String $service_upload_directory = '/var/tmp/rtm/service_upload',
     String $tomcat_directory = '/var/lib/tomcat8',
-    String $domain = 'example.com',
+    String $vhost_servername = 'agent.example.com',
+    String $cookie_domain = '.example.com',
 ) {
 
   file { "${local_scripts_directory}/build_db.sh":
@@ -26,7 +27,8 @@ class rtm::tasks (
       git_clone_directory => $git_clone_directory,
       www_directory => $www_directory,
       server_upload_directory => $server_upload_directory,
-      domain => $domain,
+      vhost_servername => $vhost_servername,
+      cookie_domain => $cookie_domain,
     }),
   }
   file { "${local_scripts_directory}/build_ogamservices.sh":

@@ -3,7 +3,7 @@ class rtm::apache (
     String $docroot_directory = '/var/www/rtm/web',
     String $log_directory = '/var/log/rtm',
     String $conf_directory = '/etc/rtm',
-    String $domain = 'example.com',
+    String $vhost_servername = 'agent.example.com',
 ) {
     # APACHE Install
     class { 'apache': # contains package['httpd'] and service['httpd']
@@ -32,11 +32,8 @@ class rtm::apache (
     # $group= $apache::params::group
 
     # APACHE Virtual host
-    apache::vhost { $fqdn:
-        servername => $domain,
-        serveraliases => [
-          $fqdn,
-        ],
+    apache::vhost { $vhost_servername:
+        servername => $vhost_servername,
         port    => '80',
         docroot => $docroot_directory,
         manage_docroot => false,
