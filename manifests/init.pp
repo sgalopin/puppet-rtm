@@ -46,6 +46,8 @@ class rtm (
     String $domain = 'example.com',
     String $admin_ip_address = "192.168.50.1",
     String $host_ip_address = $ipaddress_eth1,
+    String $pg_user = 'postgres',
+    String $pg_password = 'postgres'
 ) {
 
     package { 'unzip': ensure => 'installed' }
@@ -119,7 +121,9 @@ class rtm (
     class {'rtm::postgresql':
         git_clone_directory => $git_clone_directory,
         admin_ip_address => $admin_ip_address,
-        host_ip_address => $host_ip_address
+        host_ip_address => $host_ip_address,
+        pg_user => $pg_user,
+        pg_password => $pg_password
     }
     class {'rtm::tomcat':
         git_clone_directory => $git_clone_directory,
