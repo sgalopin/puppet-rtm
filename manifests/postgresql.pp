@@ -39,7 +39,7 @@ class rtm::postgresql (
         database    => 'all',
         user        => $pg_user,
         address     => "${admin_ip_address}/32",
-        auth_method => 'trust',
+        auth_method => 'md5',
     }
 
 		file { '/root/.pgpass':
