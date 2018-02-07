@@ -8,6 +8,10 @@ class rtm::git (
         source   => 'http://gitlab.dockerforge.ign.fr/sgalopin/rtm.git',
         revision => 'master',
     }
+    exec { "sudo sed -i '$ a 172.28.99.2 gitlab.dockerforge.ign.fr' /etc/hosts":
+      path    => '/usr/bin:/usr/sbin:/bin',
+      unless  => 'cat /etc/hosts | grep ifn-dev.ign.fr',
+    }
 
     # Working example for svn
     # package { 'subversion':
