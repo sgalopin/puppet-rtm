@@ -19,7 +19,7 @@ class rtm::apache (
     }->
     class { 'apache::mod::php': }->
     exec { [ 'sed -i "s|short_open_tag = .*|short_open_tag = On|" php.ini',
-             'sed -i "s|error_reporting = .*|error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT|" php.ini',
+             'sed -i "s|error_reporting = .*|error_reporting = E_ALL \& ~E_DEPRECATED \& ~E_STRICT|" php.ini',
              'sed -i "s|display_errors = .*|display_errors = Off|" php.ini',
              'sed -i "s|display_startup_errors = .*|display_startup_errors = Off|" php.ini' ,
              'sed -i "s|log_errors = .*|log_errors = On|" php.ini' ]:

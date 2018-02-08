@@ -31,18 +31,18 @@ echo "-- Stopping tomcat"
 
 echo "-- Decompression of the jdk 1.6"
 cd <%= $git_clone_directory %>/services_configs
-sudo rm -rdf jdk1.6.0_45
+rm -rdf jdk1.6.0_45
 chmod 700 jdk-6u45-linux-x64.bin && ./jdk-6u45-linux-x64.bin
 
 echo "-- Build of libs_java"
 cd <%= $git_clone_directory %>/services_configs/libs_java && ant build
 
 echo "-- Build of service_common"
-sudo mkdir <%= $git_clone_directory %>/service_common/classes
+mkdir -p <%= $git_clone_directory %>/service_common/classes
 cd <%= $git_clone_directory %>/services_configs/service_common && ant compile
 
 echo "-- Build of service_generation_rapport"
-sudo mkdir <%= $git_clone_directory %>/service_generation_rapport/images
+mkdir -p <%= $git_clone_directory %>/service_generation_rapport/images
 cd <%= $git_clone_directory %>/service_generation_rapport && ant deploy
 
 echo "-- Build of service_harmonization"
@@ -55,7 +55,7 @@ echo "-- Build of service_integration"
 sed -i "s|log4j.rootLogger=.*|log4j.rootLogger=ERROR, stdout|" <%= $git_clone_directory %>/service_integration/config/log4j.properties
 sed -i "s|log4j.logger.fr.ifn=.*|log4j.logger.fr.ifn=ERROR, logfile|" <%= $git_clone_directory %>/service_integration/config/log4j.properties
 sed -i "s|log4j.appender.logfile.File=.*|log4j.appender.logfile.File=/var/log/tomcat8/IntegrationService.log|" <%= $git_clone_directory %>/service_integration/config/log4j.properties
-sudo mkdir <%= $git_clone_directory %>/service_integration/classes
+mkdir -p <%= $git_clone_directory %>/service_integration/classes
 cd <%= $git_clone_directory %>/services_configs/service_integration && ant deploy
 
 echo "-- Copy of harmonization service"
