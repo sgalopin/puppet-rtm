@@ -36,28 +36,28 @@ if [ ! -d jdk1.6.0_45 ]; then
 fi
 
 echo "-- Build of libs_java"
-cd <%= $git_clone_directory %>/services_configs/libs_java && ant build
+cd <%= $git_clone_directory %>/services_configs/libs_java && ant -q build
 
 echo "-- Build of service_common"
 mkdir -p <%= $git_clone_directory %>/service_common/classes
-cd <%= $git_clone_directory %>/services_configs/service_common && ant compile
+cd <%= $git_clone_directory %>/services_configs/service_common && ant -q compile
 
 echo "-- Build of service_generation_rapport"
 mkdir -p <%= $git_clone_directory %>/service_generation_rapport/images
-cd <%= $git_clone_directory %>/service_generation_rapport && ant deploy
+cd <%= $git_clone_directory %>/service_generation_rapport && ant -q deploy
 
 echo "-- Build of service_harmonization"
 sed -i "s|log4j.rootLogger=.*|log4j.rootLogger=ERROR, stdout|" <%= $git_clone_directory %>/service_harmonization/config/log4j.properties
 sed -i "s|log4j.logger.fr.ifn=.*|log4j.logger.fr.ifn=ERROR, logfile|" <%= $git_clone_directory %>/service_harmonization/config/log4j.properties
 sed -i "s|log4j.appender.logfile.File=.*|log4j.appender.logfile.File=/var/log/tomcat8/HarmonizationService.log|" <%= $git_clone_directory %>/service_harmonization/config/log4j.properties
-cd <%= $git_clone_directory %>/services_configs/service_harmonization && ant deploy
+cd <%= $git_clone_directory %>/services_configs/service_harmonization && ant -q deploy
 
 echo "-- Build of service_integration"
 sed -i "s|log4j.rootLogger=.*|log4j.rootLogger=ERROR, stdout|" <%= $git_clone_directory %>/service_integration/config/log4j.properties
 sed -i "s|log4j.logger.fr.ifn=.*|log4j.logger.fr.ifn=ERROR, logfile|" <%= $git_clone_directory %>/service_integration/config/log4j.properties
 sed -i "s|log4j.appender.logfile.File=.*|log4j.appender.logfile.File=/var/log/tomcat8/IntegrationService.log|" <%= $git_clone_directory %>/service_integration/config/log4j.properties
 mkdir -p <%= $git_clone_directory %>/service_integration/classes
-cd <%= $git_clone_directory %>/services_configs/service_integration && ant deploy
+cd <%= $git_clone_directory %>/services_configs/service_integration && ant -q deploy
 
 echo "-- Copy of harmonization service"
 # Must be done per the ant deploy but it's not working and the build file can't be updated (revision fixed)
