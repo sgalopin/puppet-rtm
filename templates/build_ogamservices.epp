@@ -31,8 +31,9 @@ echo "-- Stopping tomcat"
 
 echo "-- Decompression of the jdk 1.6"
 cd <%= $git_clone_directory %>/services_configs
-rm -rdf jdk1.6.0_45
-chmod 700 jdk-6u45-linux-x64.bin && ./jdk-6u45-linux-x64.bin
+if [ ! -d jdk1.6.0_45 ]; then
+  chmod 700 jdk-6u45-linux-x64.bin && ./jdk-6u45-linux-x64.bin
+fi
 
 echo "-- Build of libs_java"
 cd <%= $git_clone_directory %>/services_configs/libs_java && ant build
