@@ -9,6 +9,7 @@ class rtm::apache (
     class { 'apache': # contains package['httpd'] and service['httpd']
         default_vhost => false,
         mpm_module => 'prefork', # required per the php module
+        log_level => 'error'
     }
 
     # APACHE Modules
@@ -17,8 +18,13 @@ class rtm::apache (
       ensure => 'installed'
     }->
     class { 'apache::mod::php': }->
-    exec { 'sed -i "s|short_open_tag = .*|short_open_tag = On|" /etc/php/7.0/apache2/php.ini':
+    exec { [ 'sed -i "s|short_open_tag = .*|short_open_tag = On|" php.ini',
+             'sed -i "s|error_reporting = .*|error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT|" php.ini',
+             'sed -i "s|display_errors = .*|display_errors = Off|" php.ini',
+             'sed -i "s|display_startup_errors = .*|display_startup_errors = Off|" php.ini' ,
+             'sed -i "s|log_errors = .*|log_errors = On|" php.ini' ]:
       path => '/usr/bin:/usr/sbin:/bin',
+      cwd => '/etc/php/7.0/apache2',
     }
     include apache::mod::rewrite
     include apache::mod::expires

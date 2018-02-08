@@ -13,6 +13,13 @@ class rtm::tomcat (
         package_ensure => 'present',
         package_name => 'tomcat8',
     }->
+    # https://tomcat.apache.org/tomcat-8.0-doc/logging.html#Considerations_for_production_usage
+    exec { [  "sed -i 's|, java.util.logging.ConsoleHandler||' logging.properties",
+              "sed -i 's|= FINE|= SEVERE|' logging.properties",
+              "sed -i 's|= INFO|= SEVERE|' logging.properties" ]:
+      path => '/usr/bin:/usr/sbin:/bin',
+      cwd => '/etc/tomcat8',
+    }->
     file { "${tomcat_directory}/lib":
         ensure  => directory,
         owner => 'tomcat8',

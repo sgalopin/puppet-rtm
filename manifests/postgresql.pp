@@ -16,7 +16,13 @@ class rtm::postgresql (
         manage_pg_hba_conf => true,
         port => 5432,
         postgres_password => postgresql_password($pg_user, $pg_password),
-    }
+    }->
+		exec { [ 'sed -i "s|#*client_min_messages = .*|client_min_messages = error|" postgresql.conf',
+						 'sed -i "s|#*log_min_messages = .*|log_min_messages = error|" postgresql.conf',
+						 'sed -i "s|#*log_min_error_statement = .*|log_min_error_statement = error|" postgresql.conf' ]:
+			path => '/usr/bin:/usr/sbin:/bin',
+			cwd => '/etc/postgresql/9.6/main',
+		}
 
 		# Installs the PostgreSQL postgis packages
 		include postgresql::server::postgis
