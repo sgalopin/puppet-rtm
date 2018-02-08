@@ -13,7 +13,7 @@ class rtm::mapserv (
       source => "${git_clone_directory}/mapserver",
       group => 'www-data',
     }->
-    exec { [  "sed -i 's|vrtm-onf.ifn.fr|${vhost_servername}|' rtm.map",
+    exec { [  "sed -i 's|http://vrtm-onf.ifn.fr|https://${vhost_servername}|' rtm.map",
               "sed -i 's|/vagrant/ogam/website/htdocs/logs|${log_directory}|' rtm.map",
               "sed -i 's|/vagrant/ogam/mapserver|${conf_directory}/mapserver|' rtm.map" ]:
       path => '/usr/bin:/usr/sbin:/bin',

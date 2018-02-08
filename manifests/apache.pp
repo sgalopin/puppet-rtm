@@ -79,7 +79,7 @@ class rtm::apache (
           custom_fragment => "
 SetEnv MS_MAPFILE \"${conf_directory}/mapserver/rtm.map\"
 SetEnv MS_ERRORFILE \"${log_directory}/mapserver_rtm.log\"
-SetEnv MS_DEBUGLEVEL 5",
+SetEnv MS_DEBUGLEVEL 0",
         }],
         aliases => [{
                 alias => '/custom',
