@@ -38,7 +38,7 @@ sed -i 's|resources.session.cookie_domain = ".ifn.fr"|resources.session.cookie_d
 sed -i 's|Zend_Log::DEBUG|Zend_Log::ERR|' <%= $git_clone_directory %>/website/htdocs/custom/application/configs/application.ini
 sed -i 's|http://vrtm-onf.ifn.fr|https://<%= $vhost_servername %>|' <%= $git_clone_directory %>/website/htdocs/custom/application/configs/app.ini
 sed -i 's|/vagrant/ogam/website/htdocs/upload|<%= $server_upload_directory %>|' <%= $git_clone_directory %>/website/htdocs/custom/application/configs/app.ini
-cd <%= $git_clone_directory %>/website && ant deployWebSite
+cd <%= $git_clone_directory %>/website && ant -q deployWebSite
 # Deploy directories :
 # cps.js.pack.path = ./htdocs/ogam/public/js/genapp/genapp.pack.js
 # cps.css.pack.path = ./htdocs/ogam/public/js/genapp/resources/css/genapp.pack.css
