@@ -1,0 +1,51 @@
+#!/bin/bash
+set -e
+set -o pipefail
+
+# Default configuration :
+environment=prod
+www_rtm=<%= $www_directory %>
+
+while [ "x$1" != "x"  ]
+do
+  case "$1" in
+      "--env" | "-e" )
+          shift
+          case $1 in
+            production) environment="prod";;
+            development) environment="dev";;
+            *) environment=$1;;
+          esac
+          shift
+          ;;
+      "--help" | "-h" | * )
+          echo "Install Rtm Server"
+          echo "  Usage : $(basename $0) [options]"
+          echo "    Options :"
+          echo "      -e, --env    : Build environment [dev, prod] (default: « $environment »)"
+          echo "      -h, --help   : Print help information and exit"
+          exit
+          ;;
+  esac
+done
+
+echo "-- Installation of Rtm Server (env=$environment)"
+
+echo "-- Build php and js app"
+sed -i 's|<exclude name="\*\*/application/configs/\*" />||' <%= $git_clone_directory %>/website/build.xml
+sed -i 's|<exclude name="\*\*/application/configs/\*\*" />||' <%= $git_clone_directory %>/website/build.xml
+sed -i 's|resources.session.cookie_domain = ".ifn.fr"|resources.session.cookie_domain = "<%= $cookie_domain %>"|' <%= $git_clone_directory %>/website/htdocs/custom/application/configs/application.ini
+sed -i 's|Zend_Log::DEBUG|Zend_Log::ERR|' <%= $git_clone_directory %>/website/htdocs/custom/application/configs/application.ini
+sed -i 's|http://vrtm-onf.ifn.fr|https://<%= $vhost_servername %>|' <%= $git_clone_directory %>/website/htdocs/custom/application/configs/app.ini
+sed -i 's|/vagrant/ogam/website/htdocs/upload|<%= $server_upload_directory %>|' <%= $git_clone_directory %>/website/htdocs/custom/application/configs/app.ini
+cd <%= $git_clone_directory %>/website && ant -q deployWebSite
+# Deploy directories :
+# cps.js.pack.path = ./htdocs/ogam/public/js/genapp/genapp.pack.js
+# cps.css.pack.path = ./htdocs/ogam/public/js/genapp/resources/css/genapp.pack.css
+
+echo "-- Copy the sources into the public directory"
+cd $www_rtm && rm -rdf *
+cp -Tr /tmpdist/edb $www_rtm
+
+echo "-- Add rights"
+chown -R www-data:www-data $www_rtm && chmod -R 770 $www_rtm

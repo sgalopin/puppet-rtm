@@ -1,0 +1,10 @@
+{
+  "description": "Allows you to perform rtm service functions",
+  "input_method": "stdin",
+  "parameters": {
+    "action": {
+      "description": "Action to perform ",
+      "type": "Enum[build_db, build_ogamserver, build_ogamservices]"
+    }
+  }
+}
