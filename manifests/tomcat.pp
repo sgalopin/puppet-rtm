@@ -12,11 +12,17 @@ class rtm::tomcat {
         package_name => 'tomcat8',
     }->
     # https://tomcat.apache.org/tomcat-8.0-doc/logging.html#Considerations_for_production_usage
-    exec { [  "sed -i 's|, java.util.logging.ConsoleHandler||' logging.properties",
-              "sed -i 's|= FINE|= SEVERE|' logging.properties",
-              "sed -i 's|= INFO|= SEVERE|' logging.properties" ]:
-      path => '/usr/bin:/usr/sbin:/bin',
-      cwd => '/etc/tomcat8',
+    file_line { 'ConsoleHandler':
+			ensure => present,
+			path   => '/etc/tomcat8/logging.properties',
+			match  => '^(\.*)handlers = (.*), java.util.logging.ConsoleHandler',
+			line   => '\1handlers = \2',
+		}->
+    file_line { 'level':
+      ensure => present,
+      path   => '/etc/tomcat8/logging.properties',
+      match  => '(.*).level = ',
+      line   => '\1.level = SEVERE',
     }->
     file { "${rtm::tomcat_directory}/lib":
         ensure  => directory,

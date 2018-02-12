@@ -9,11 +9,23 @@ class rtm::mapserv {
       source => "${rtm::git_clone_directory}/mapserver",
       group => 'www-data',
     }->
-    exec { [  "sed -i 's|http://vrtm-onf.ifn.fr|https://${rtm::vhost_servername}|' rtm.map",
-              "sed -i 's|/vagrant/ogam/website/htdocs/logs|${rtm::log_directory}|' rtm.map",
-              "sed -i 's|/vagrant/ogam/mapserver|${rtm::conf_directory}/mapserver|' rtm.map" ]:
-      path => '/usr/bin:/usr/sbin:/bin',
-      cwd => "${rtm::conf_directory}/mapserver",
+    file_line { 'vrtm-onf.ifn.fr':
+      ensure => present,
+      path   => "${rtm::conf_directory}/mapserver/rtm.map",
+      match  => '(.*)http://vrtm-onf.ifn.fr(.*)',
+      line   => "\1https://${rtm::vhost_servername}\2",
+    }->
+    file_line { '/vagrant/ogam/website/htdocs/logs':
+      ensure => present,
+      path   => "${rtm::conf_directory}/mapserver/rtm.map",
+      match  => '(.*)/vagrant/ogam/website/htdocs/logs(.*)',
+      line   => "\1${rtm::log_directory}\2",
+    }->
+    file_line { '/vagrant/ogam/mapserver':
+      ensure => present,
+      path   => "${rtm::conf_directory}/mapserver/rtm.map",
+      match  => '(.*)/vagrant/ogam/mapserver(.*)',
+      line   => "\1${rtm::conf_directory}/mapserver\2",
     }
 
     # mapserv is a fcgi compatible, use default config sethandler with .fcgi

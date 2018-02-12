@@ -12,11 +12,23 @@ class rtm::postgresql {
         port => 5432,
         postgres_password => postgresql_password($rtm::pg_user, $rtm::pg_password),
     }->
-		exec { [ 'sed -i "s|#*client_min_messages = .*|client_min_messages = error|" postgresql.conf',
-						 'sed -i "s|#*log_min_messages = .*|log_min_messages = error|" postgresql.conf',
-						 'sed -i "s|#*log_min_error_statement = .*|log_min_error_statement = error|" postgresql.conf' ]:
-			path => '/usr/bin:/usr/sbin:/bin',
-			cwd => '/etc/postgresql/9.6/main',
+		file_line { 'client_min_messages':
+			ensure => present,
+			path   => '/etc/postgresql/9.6/main/postgresql.conf',
+			match  => 'client_min_messages = .*',
+			line   => 'client_min_messages = error',
+		}->
+		file_line { 'log_min_messages':
+			ensure => present,
+			path   => '/etc/postgresql/9.6/main/postgresql.conf',
+			match  => 'log_min_messages = .*',
+			line   => 'log_min_messages = error',
+		}->
+		file_line { 'log_min_error_statement':
+			ensure => present,
+			path   => '/etc/postgresql/9.6/main/postgresql.conf',
+			match  => 'log_min_error_statement = .*',
+			line   => 'log_min_error_statement = error',
 		}
 
 		# Installs the PostgreSQL postgis packages
