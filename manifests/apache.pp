@@ -45,7 +45,7 @@ class rtm::apache {
       match  => 'display_startup_errors\ \=\ .*',
       line   => 'display_startup_errors = Off',
     }->
-    file_line { 'display_startup_errors':
+    file_line { 'log_errors':
       ensure => present,
       path   => '/etc/php/7.0/apache2/php.ini',
       match  => 'log_errors\ \=\ .*',
