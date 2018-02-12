@@ -34,9 +34,10 @@ class rtm::tasks (
   file { "${local_scripts_directory}/build_ogamservices.sh":
     ensure  => 'file',
     mode    => '0400',
-    content => epp("${module_name}/build_ogamservices.epp", {
+    content => epp("${module_name}/build_ogamservices.epp"
+    /*, {
       git_clone_directory => $git_clone_directory,
       tomcat_directory => $tomcat_directory,
-    }),
+    }*/),
   }
 }

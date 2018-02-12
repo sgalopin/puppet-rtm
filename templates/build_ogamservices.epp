@@ -30,39 +30,39 @@ echo "-- Stopping tomcat"
 /etc/init.d/tomcat8 stop
 
 echo "-- Decompression of the jdk 1.6"
-cd <%= $git_clone_directory %>/services_configs
+cd <%= $rtm::git_clone_directory %>/services_configs
 if [ ! -d jdk1.6.0_45 ]; then
   chmod 700 jdk-6u45-linux-x64.bin && ./jdk-6u45-linux-x64.bin
 fi
 
 echo "-- Build of libs_java"
-cd <%= $git_clone_directory %>/services_configs/libs_java && ant -q build
+cd <%= $rtm::git_clone_directory %>/services_configs/libs_java && ant -q build
 
 echo "-- Build of service_common"
-mkdir -p <%= $git_clone_directory %>/service_common/classes
-cd <%= $git_clone_directory %>/services_configs/service_common && ant -q compile
+mkdir -p <%= $rtm::git_clone_directory %>/service_common/classes
+cd <%= $rtm::git_clone_directory %>/services_configs/service_common && ant -q compile
 
 echo "-- Build of service_generation_rapport"
-mkdir -p <%= $git_clone_directory %>/service_generation_rapport/images
-cd <%= $git_clone_directory %>/service_generation_rapport && ant -q deploy
+mkdir -p <%= $rtm::git_clone_directory %>/service_generation_rapport/images
+cd <%= $rtm::git_clone_directory %>/service_generation_rapport && ant -q deploy
 
 echo "-- Build of service_harmonization"
-sed -i "s|log4j.rootLogger=.*|log4j.rootLogger=ERROR, stdout|" <%= $git_clone_directory %>/service_harmonization/config/log4j.properties
-sed -i "s|log4j.logger.fr.ifn=.*|log4j.logger.fr.ifn=ERROR, logfile|" <%= $git_clone_directory %>/service_harmonization/config/log4j.properties
-sed -i "s|log4j.appender.logfile.File=.*|log4j.appender.logfile.File=/var/log/tomcat8/HarmonizationService.log|" <%= $git_clone_directory %>/service_harmonization/config/log4j.properties
-cd <%= $git_clone_directory %>/services_configs/service_harmonization && ant -q deploy
+sed -i "s|log4j.rootLogger=.*|log4j.rootLogger=ERROR, stdout|" <%= $rtm::git_clone_directory %>/service_harmonization/config/log4j.properties
+sed -i "s|log4j.logger.fr.ifn=.*|log4j.logger.fr.ifn=ERROR, logfile|" <%= $rtm::git_clone_directory %>/service_harmonization/config/log4j.properties
+sed -i "s|log4j.appender.logfile.File=.*|log4j.appender.logfile.File=/var/log/tomcat8/HarmonizationService.log|" <%= $rtm::git_clone_directory %>/service_harmonization/config/log4j.properties
+cd <%= $rtm::git_clone_directory %>/services_configs/service_harmonization && ant -q deploy
 
 echo "-- Build of service_integration"
-sed -i "s|log4j.rootLogger=.*|log4j.rootLogger=ERROR, stdout|" <%= $git_clone_directory %>/service_integration/config/log4j.properties
-sed -i "s|log4j.logger.fr.ifn=.*|log4j.logger.fr.ifn=ERROR, logfile|" <%= $git_clone_directory %>/service_integration/config/log4j.properties
-sed -i "s|log4j.appender.logfile.File=.*|log4j.appender.logfile.File=/var/log/tomcat8/IntegrationService.log|" <%= $git_clone_directory %>/service_integration/config/log4j.properties
-mkdir -p <%= $git_clone_directory %>/service_integration/classes
-cd <%= $git_clone_directory %>/services_configs/service_integration && ant -q deploy
+sed -i "s|log4j.rootLogger=.*|log4j.rootLogger=ERROR, stdout|" <%= $rtm::git_clone_directory %>/service_integration/config/log4j.properties
+sed -i "s|log4j.logger.fr.ifn=.*|log4j.logger.fr.ifn=ERROR, logfile|" <%= $rtm::git_clone_directory %>/service_integration/config/log4j.properties
+sed -i "s|log4j.appender.logfile.File=.*|log4j.appender.logfile.File=/var/log/tomcat8/IntegrationService.log|" <%= $rtm::git_clone_directory %>/service_integration/config/log4j.properties
+mkdir -p <%= $rtm::git_clone_directory %>/service_integration/classes
+cd <%= $rtm::git_clone_directory %>/services_configs/service_integration && ant -q deploy
 
 echo "-- Copy of harmonization service"
 # Must be done per the ant deploy but it's not working and the build file can't be updated (revision fixed)
-cp <%= $git_clone_directory %>/services_configs/service_harmonization/RTMHarmonizationService.xml \
-<%= $tomcat_directory %>/conf/Catalina/localhost/RTMHarmonizationService.xml
+cp <%= $rtm::git_clone_directory %>/services_configs/service_harmonization/RTMHarmonizationService.xml \
+<%= $rtm::tomcat_directory %>/conf/Catalina/localhost/RTMHarmonizationService.xml
 
 echo "-- Starting tomcat"
 /etc/init.d/tomcat8 start

@@ -1,10 +1,5 @@
-class rtm::apache (
-    String $www_directory = '/var/www/rtm',
-    String $docroot_directory = '/var/www/rtm/web',
-    String $log_directory = '/var/log/rtm',
-    String $conf_directory = '/etc/rtm',
-    String $vhost_servername = 'agent.example.com',
-) {
+class rtm::apache {
+
     # APACHE Install
     class { 'apache': # contains package['httpd'] and service['httpd']
         default_vhost => false,
@@ -38,10 +33,10 @@ class rtm::apache (
     # $group= $apache::params::group
 
     # APACHE Virtual host
-    apache::vhost { $vhost_servername:
-        servername => $vhost_servername,
+    apache::vhost { $rtm::vhost_servername:
+        servername => $rtm::vhost_servername,
         port    => '80',
-        docroot => $docroot_directory,
+        docroot => $rtm::docroot_directory,
         manage_docroot => false,
         docroot_owner => 'www-data',
         docroot_group => 'www-data',
@@ -61,14 +56,14 @@ class rtm::apache (
             'opcache.fast_shutdown' => '1',
         },
         directories => [{
-          path => $docroot_directory,
+          path => $rtm::docroot_directory,
           override => 'None',
           require => 'all granted',
           options => ['-MultiViews'],
           rewrites => [
             {
               comment      => 'Redirection to custom',
-              rewrite_cond => ["${www_directory}/custom/public/\$1 -f"],
+              rewrite_cond => ["${rtm::www_directory}/custom/public/\$1 -f"],
               rewrite_rule => ['^(.+) /custom/$1 [QSA,L]'],
             },{
               comment      => 'Redirection to php app',
@@ -77,19 +72,19 @@ class rtm::apache (
             },
           ],
         },{
-          path => "${www_directory}/custom/public",
+          path => "${rtm::www_directory}/custom/public",
           provider => 'location',
         },{
           path => "/cgi-bin/mapserv.rtm",
           provider => 'location',
           custom_fragment => "
-SetEnv MS_MAPFILE \"${conf_directory}/mapserver/rtm.map\"
-SetEnv MS_ERRORFILE \"${log_directory}/mapserver_rtm.log\"
+SetEnv MS_MAPFILE \"${rtm::conf_directory}/mapserver/rtm.map\"
+SetEnv MS_ERRORFILE \"${rtm::log_directory}/mapserver_rtm.log\"
 SetEnv MS_DEBUGLEVEL 0",
         }],
         aliases => [{
                 alias => '/custom',
-                path  => "${www_directory}/custom/public",
+                path  => "${rtm::www_directory}/custom/public",
             },{
                 scriptalias => '/cgi-bin/mapserv.rtm',
                 path  => "/usr/lib/cgi-bin/mapserv.fcgi",

@@ -116,41 +116,10 @@ class rtm (
 
     # Class
     include rtm::java
-    class {'rtm::git':
-        git_clone_directory => $git_clone_directory
-    }
-    class {'rtm::postgresql':
-        git_clone_directory => $git_clone_directory,
-        admin_ip_address => $admin_ip_address,
-        host_ip_address => $host_ip_address,
-        pg_user => $pg_user,
-        pg_password => $pg_password
-    }
-    class {'rtm::tomcat':
-        git_clone_directory => $git_clone_directory,
-    }
-    class {'rtm::apache':
-        www_directory => $www_directory,
-        docroot_directory => $docroot_directory,
-        log_directory => $log_directory,
-        conf_directory => $conf_directory,
-        vhost_servername => $vhost_servername,
-    }
-    class {'rtm::mapserv':
-        git_clone_directory => $git_clone_directory,
-        conf_directory => $conf_directory,
-        log_directory => $log_directory,
-        vhost_servername => $vhost_servername,
-    }
-    class {'rtm::tasks':
-        docroot_directory => $docroot_directory,
-        git_clone_directory => $git_clone_directory,
-        local_scripts_directory => $local_scripts_directory,
-        www_directory => $www_directory,
-        server_upload_directory  => $server_upload_directory,
-        service_upload_directory => $service_upload_directory,
-        tomcat_directory => $tomcat_directory,
-        vhost_servername => $vhost_servername,
-        cookie_domain => $cookie_domain,
-    }
+    include rtm::git
+    include rtm::postgresql
+    include rtm::tomcat
+    include rtm::apache
+    include rtm::mapserv
+    include rtm::tasks
 }

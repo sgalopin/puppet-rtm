@@ -1,8 +1,6 @@
-class rtm::git (
-    String $git_clone_directory = '/root/tmp/rtm/sources'
-) {
+class rtm::git {
 
-    vcsrepo { $git_clone_directory:
+    vcsrepo { $rtm::git_clone_directory:
         ensure   => latest,
         provider => git,
         source   => 'http://gitlab.dockerforge.ign.fr/sgalopin/rtm.git',
@@ -17,9 +15,9 @@ class rtm::git (
     # package { 'subversion':
     #   ensure => 'installed'
     # }->
-    # exec { "svn co http://ifn-dev.ign.fr/svn/RTM/trunk ${git_clone_directory}":
+    # exec { "svn co http://ifn-dev.ign.fr/svn/RTM/trunk ${rtm::git_clone_directory}":
     #   path    => '/usr/bin:/usr/sbin:/bin',
-    #   unless  => "test -f ${git_clone_directory}/README.txt",
+    #   unless  => "test -f ${rtm::git_clone_directory}/README.txt",
     # }
     # exec { "sudo sed -i '$ a 172.27.5.200 ifn-dev' /etc/hosts":
     #   path    => '/usr/bin:/usr/sbin:/bin',
@@ -30,7 +28,7 @@ class rtm::git (
     # The includes parameters use 'svn update' command and so doesn't checkout the externals
     # The 'svn co' done (when there are no inludes or excludes parameters)
     # with that module throws an encoding error on the dir 'Bases SQL/donnees_fournies_par_RTM/'
-    # vcsrepo { $git_clone_directory:
+    # vcsrepo { $rtm::git_clone_directory:
     #     ensure   => present,
     #     provider => svn,
     #     source   => 'http://ifn-dev.ign.fr/svn/RTM/trunk',
