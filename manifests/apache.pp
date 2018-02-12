@@ -13,14 +13,45 @@ class rtm::apache {
       ensure => 'installed'
     }->
     class { 'apache::mod::php': }->
-    exec { [ 'sed -i "s|short_open_tag = .*|short_open_tag = On|" php.ini',
+    /*exec { [ 'sed -i "s|short_open_tag = .*|short_open_tag = On|" php.ini',
              'sed -i "s|error_reporting = .*|error_reporting = E_ALL \& ~E_DEPRECATED \& ~E_STRICT|" php.ini',
              'sed -i "s|display_errors = .*|display_errors = Off|" php.ini',
              'sed -i "s|display_startup_errors = .*|display_startup_errors = Off|" php.ini' ,
              'sed -i "s|log_errors = .*|log_errors = On|" php.ini' ]:
       path => '/usr/bin:/usr/sbin:/bin',
       cwd => '/etc/php/7.0/apache2',
+    }*/
+    file_line { 'short_open_tag':
+      ensure => present,
+      path   => '/etc/php/7.0/apache2/php.ini',
+      match  => 'short_open_tag = .*',
+      line   => 'short_open_tag = On',
+    }->
+    file_line { 'error_reporting':
+      ensure => present,
+      path   => '/etc/php/7.0/apache2/php.ini',
+      match  => 'error_reporting\ \=\ .*',
+      line   => 'error_reporting = E_ALL \& ~E_DEPRECATED \& ~E_STRICT',
+    }->
+    file_line { 'display_errors':
+      ensure => present,
+      path   => '/etc/php/7.0/apache2/php.ini',
+      match  => 'display_errors\ \=\ .*',
+      line   => 'display_errors = Off',
+    }->
+    file_line { 'display_startup_errors':
+      ensure => present,
+      path   => '/etc/php/7.0/apache2/php.ini',
+      match  => 'display_startup_errors\ \=\ .*',
+      line   => 'display_startup_errors = Off',
+    }->
+    file_line { 'display_startup_errors':
+      ensure => present,
+      path   => '/etc/php/7.0/apache2/php.ini',
+      match  => 'log_errors\ \=\ .*',
+      line   => 'log_errors = On',
     }
+
     include apache::mod::rewrite
     include apache::mod::expires
     include apache::mod::cgi
