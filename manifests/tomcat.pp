@@ -12,16 +12,17 @@ class rtm::tomcat {
         package_name => 'tomcat8',
     }->
     # https://tomcat.apache.org/tomcat-8.0-doc/logging.html#Considerations_for_production_usage
-    ext_file_line { 'tomcate_handlers':
+    ext_file_line { 'tomcat_handlers':
 			ensure => present,
 			path   => '/etc/tomcat8/logging.properties',
 			match  => '^(\.*)handlers = (.*), java.util.logging.ConsoleHandler',
 			line   => '\1handlers = \2',
+      multiple => true,
 		}->
     ext_file_line { 'tomcat_logs_level':
       ensure => present,
       path   => '/etc/tomcat8/logging.properties',
-      match  => '(.*).level = ',
+      match  => '(.*).level = (.*)',
       line   => '\1.level = SEVERE',
       multiple => true,
     }->
