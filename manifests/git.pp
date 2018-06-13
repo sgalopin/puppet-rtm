@@ -3,7 +3,7 @@ class rtm::git {
     vcsrepo { $rtm::git_clone_directory:
         ensure   => latest,
         provider => git,
-        source   => 'http://gitlab.dockerforge.ign.fr/sgalopin/rtm.git',
+        source   => 'https://gitlab.dockerforge.ign.fr/sgalopin/rtm.git',
         revision => 'master',
     }
     file_line { 'gitlab':
