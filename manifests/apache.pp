@@ -68,6 +68,7 @@ class rtm::apache {
         php_values => {
             'post_max_size' => '200M',
             'upload_max_filesize' => '200M',
+			'memory_limit' => '256M',
             'opcache.revalidate_freq' => '3',
             'xdebug.default_enable' => 'false',
         },
