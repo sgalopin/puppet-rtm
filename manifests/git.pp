@@ -3,13 +3,13 @@ class rtm::git {
     vcsrepo { $rtm::git_clone_directory:
         ensure   => latest,
         provider => git,
-        source   => 'https://gitlab.dockerforge.ign.fr/sgalopin/rtm.git',
+        source   => 'http://gitlab.dockerforge.ign.fr/sgalopin/rtm.git',
         revision => 'master',
     }
     file_line { 'gitlab':
       ensure => present,
       path   => '/etc/hosts',
-      line   => '172.28.99.2 gitlab.dockerforge.ign.fr',
+      line   => '10.91.140.3 gitlab.dockerforge.ign.fr',
     }
 
     # Working example for svn
