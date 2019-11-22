@@ -44,6 +44,7 @@ class rtm::mapserv {
       path   => "${rtm::conf_directory}/mapserver/rtm.map",
       match  => '(.*)user=rtm password=rtm(.*)',
       line   => "\\1user=${rtm::pg_db_user} password=${rtm::pg_db_password}\\2",
+      multiple => true,
     }
 
     # mapserv is a fcgi compatible, use default config sethandler with .fcgi
