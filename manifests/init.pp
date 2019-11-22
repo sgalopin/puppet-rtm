@@ -48,7 +48,11 @@ class rtm (
     String $admin_ip_address = "192.168.50.1",
     String $host_ip_address = $ipaddress_eth1,
     String $pg_user = 'postgres',
-    String $pg_password = 'postgres'
+    String $pg_password = 'postgres',
+    String $pg_db_user = 'rtm',
+    String $pg_db_password = 'rtm',
+    String $proxy_host = 'proxy.ign.fr',
+    String $proxy_port = '3128'
 ) {
 
     package { 'unzip': ensure => 'installed' }
