@@ -36,6 +36,8 @@ sed -i 's|<exclude name="\*\*/application/configs/\*" />||' <%= $rtm::git_clone_
 sed -i 's|<exclude name="\*\*/application/configs/\*\*" />||' <%= $rtm::git_clone_directory %>/website/build.xml
 sed -i 's|resources.session.cookie_domain = ".ifn.fr"|resources.session.cookie_domain = "<%= $rtm::cookie_domain %>"|' <%= $rtm::git_clone_directory %>/website/htdocs/custom/application/configs/application.ini
 sed -i 's|Zend_Log::DEBUG|Zend_Log::ERR|' <%= $rtm::git_clone_directory %>/website/htdocs/custom/application/configs/application.ini
+sed -i 's|resources.db.params.username = "rtm"|resources.db.params.username = "<%= $rtm::pg_db_user %>"|' <%= $rtm::git_clone_directory %>/website/htdocs/custom/application/configs/application.ini
+sed -i 's|resources.db.params.password = "rtm"|resources.db.params.password = "<%= $rtm::pg_db_password %>"|' <%= $rtm::git_clone_directory %>/website/htdocs/custom/application/configs/application.ini
 sed -i 's|http://vrtm-onf.ifn.fr|https://<%= $rtm::vhost_servername %>|' <%= $rtm::git_clone_directory %>/website/htdocs/custom/application/configs/app.ini
 sed -i 's|/vagrant/ogam/website/htdocs/upload|<%= $rtm::server_upload_directory %>|' <%= $rtm::git_clone_directory %>/website/htdocs/custom/application/configs/app.ini
 cd <%= $rtm::git_clone_directory %>/website && ant -q deployWebSite

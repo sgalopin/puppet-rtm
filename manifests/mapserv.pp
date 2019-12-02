@@ -26,6 +26,25 @@ class rtm::mapserv {
       path   => "${rtm::conf_directory}/mapserver/rtm.map",
       match  => '(.*)/vagrant/ogam/mapserver(.*)',
       line   => "\\1${rtm::conf_directory}/mapserver\\2",
+    }->
+    ext_file_line { 'mapserver_map_proxy_host':
+      ensure => present,
+      path   => "${rtm::conf_directory}/mapserver/rtm.map",
+      match  => '(.*)proxy.ign.fr(.*)',
+      line   => "\\1${rtm::proxy_host}\\2",
+    }->
+    ext_file_line { 'mapserver_map_proxy_port':
+      ensure => present,
+      path   => "${rtm::conf_directory}/mapserver/rtm.map",
+      match  => '(.*)3128(.*)',
+      line   => "\\1${rtm::proxy_port}\\2",
+    }->
+    ext_file_line { 'mapserver_map_db_user_password':
+      ensure => present,
+      path   => "${rtm::conf_directory}/mapserver/rtm.map",
+      match  => '(.*)user=rtm password=rtm(.*)',
+      line   => "\\1user=${rtm::pg_db_user} password=${rtm::pg_db_password}\\2",
+      multiple => true,
     }
 
     # mapserv is a fcgi compatible, use default config sethandler with .fcgi

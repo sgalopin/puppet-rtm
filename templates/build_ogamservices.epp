@@ -43,16 +43,19 @@ mkdir -p <%= $rtm::git_clone_directory %>/service_common/classes
 cd <%= $rtm::git_clone_directory %>/services_configs/service_common && ant -q compile
 
 echo "-- Build of service_generation_rapport"
+sed -i "s|username=\"rtm\" password=\"rtm\"|username=\"<%= $rtm::pg_db_user %>\" password=\"<%= $rtm::pg_db_password %>\"|" <%= $rtm::git_clone_directory %>/services_configs/service_generation_rapport/RTMRG.xml 
 mkdir -p <%= $rtm::git_clone_directory %>/service_generation_rapport/images
 cd <%= $rtm::git_clone_directory %>/service_generation_rapport && ant -q deploy
 
 echo "-- Build of service_harmonization"
+sed -i "s|username=\"rtm\" password=\"rtm\"|username=\"<%= $rtm::pg_db_user %>\" password=\"<%= $rtm::pg_db_password %>\"|" <%= $rtm::git_clone_directory %>/services_configs/service_harmonization/RTMHarmonizationService.xml 
 sed -i "s|log4j.rootLogger=.*|log4j.rootLogger=ERROR, stdout|" <%= $rtm::git_clone_directory %>/service_harmonization/config/log4j.properties
 sed -i "s|log4j.logger.fr.ifn=.*|log4j.logger.fr.ifn=ERROR, logfile|" <%= $rtm::git_clone_directory %>/service_harmonization/config/log4j.properties
 sed -i "s|log4j.appender.logfile.File=.*|log4j.appender.logfile.File=/var/log/tomcat8/HarmonizationService.log|" <%= $rtm::git_clone_directory %>/service_harmonization/config/log4j.properties
 cd <%= $rtm::git_clone_directory %>/services_configs/service_harmonization && ant -q deploy
 
 echo "-- Build of service_integration"
+sed -i "s|username=\"rtm\" password=\"rtm\"|username=\"<%= $rtm::pg_db_user %>\" password=\"<%= $rtm::pg_db_password %>\"|" <%= $rtm::git_clone_directory %>/services_configs/service_integration/RTMIntegrationService.xml 
 sed -i "s|log4j.rootLogger=.*|log4j.rootLogger=ERROR, stdout|" <%= $rtm::git_clone_directory %>/service_integration/config/log4j.properties
 sed -i "s|log4j.logger.fr.ifn=.*|log4j.logger.fr.ifn=ERROR, logfile|" <%= $rtm::git_clone_directory %>/service_integration/config/log4j.properties
 sed -i "s|log4j.appender.logfile.File=.*|log4j.appender.logfile.File=/var/log/tomcat8/IntegrationService.log|" <%= $rtm::git_clone_directory %>/service_integration/config/log4j.properties

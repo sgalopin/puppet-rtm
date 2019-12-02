@@ -9,7 +9,7 @@ class rtm::git {
     file_line { 'gitlab':
       ensure => present,
       path   => '/etc/hosts',
-      line   => '172.28.99.2 gitlab.dockerforge.ign.fr',
+      line   => '10.91.140.3 gitlab.dockerforge.ign.fr',
     }
 
     # Working example for svn
